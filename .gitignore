@@ -3,7 +3,7 @@ node_modules/
 .pnpm-store/
 .yarn/
 bun.lockb
-!.github/
+
 # Carpetas y archivos ocultos del sistema
 .*
 !.gitignore
@@ -12,6 +12,7 @@ bun.lockb
 !.eslintrc.json
 !.biomeignore
 !biome.json
+!.github/
 
 # Agentes de AI y herramientas de desarrollo
 .zcode/
