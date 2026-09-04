@@ -557,6 +557,11 @@ $_utility-registry: ();
 @include register-utility("transition-transform", (transition: transform 150ms ease));
 
 // --- Map-derived registrations (same maps as _utilities.scss) ---
+
+// Local copies of the design-token maps so the registry stays
+// independent from the variables module. Every map is !default, so
+// it can be overridden before importing this module.
+// Box-shadow scale used for .shadow-*.
 $shadow-map: (
   "none": none, "sm": 0 1px 2px 0 rgb(0 0 0 / 0.05),
   "md": (0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)),
@@ -565,39 +570,47 @@ $shadow-map: (
   "2xl": 0 25px 50px -12px rgb(0 0 0 / 0.25), "inner": inset 0 2px 4px 0 rgb(0 0 0 / 0.05)
 ) !default;
 
+// Border-radius scale used for .rounded-*.
 $radius-map: (
   "none": 0, "sm": 0.125rem, "md": 0.375rem, "lg": 0.5rem,
   "xl": 0.75rem, "2xl": 1rem, "3xl": 1.5rem, "full": 9999px
 ) !default;
 
+// Z-index scale used for .z-*.
 $z-layers-map: (
   "auto": auto, "0": 0, "10": 10, "20": 20, "30": 30, "40": 40, "50": 50,
   "dropdown": 1000, "sticky": 1020, "fixed": 1030, "modal": 1040, "popover": 1050, "tooltip": 1060
 ) !default;
 
+// Transition durations used for .duration-*.
 $transition-duration-map: (
   "75": 75ms, "100": 100ms, "150": 150ms, "200": 200ms,
   "300": 300ms, "500": 500ms, "700": 700ms, "1000": 1000ms
 ) !default;
 
+// Timing functions used for .ease-*.
 $transition-timing-map: (
   "linear": linear, "in": cubic-bezier(0.4, 0, 1, 1),
   "out": cubic-bezier(0, 0, 0.2, 1), "in-out": cubic-bezier(0.4, 0, 0.2, 1)
 ) !default;
 
+// Opacity steps used for .opacity-*.
 $opacity-values: (
   "0": 0, "5": 0.05, "10": 0.1, "20": 0.2, "25": 0.25, "30": 0.3,
   "40": 0.4, "50": 0.5, "60": 0.6, "70": 0.7, "75": 0.75,
   "80": 0.8, "90": 0.9, "95": 0.95, "100": 1
 ) !default;
 
+// Font weights used for .font-*.
 $font-weight-values: (
   "thin": 100, "extralight": 200, "light": 300, "normal": 400,
   "medium": 500, "semibold": 600, "bold": 700, "extrabold": 800, "black": 900
 ) !default;
 
+// Text alignments used for .text-*.
 $text-align-values: (left, center, right, justify) !default;
 
+// Display values used for display utilities (bare class names).
 $display-values: (
   block: block, inline-block: inline-block, inline: inline, flex: flex,
   inline-flex: inline-flex, grid: grid, inline-grid: inline-grid,
@@ -605,17 +618,22 @@ $display-values: (
   hidden: none, contents: contents
 ) !default;
 
+// Position and overflow scales for .static/.fixed/… and .overflow-*.
 $position-values: (static, fixed, absolute, relative, sticky) !default;
 $overflow-values: (auto, hidden, scroll, visible) !default;
 
+// Flex direction/wrap and alignment maps used by the flex utilities.
 $flex-direction-map: ("row": row, "row-reverse": row-reverse, "col": column, "col-reverse": column-reverse) !default;
 $flex-wrap-list: (wrap, nowrap) !default;
 $align-items-map: ("start": flex-start, "center": center, "end": flex-end, "stretch": stretch) !default;
 $justify-content-map: ("start": flex-start, "center": center, "end": flex-end, "between": space-between, "around": space-around, "evenly": space-evenly) !default;
+
+// Whitespace-related scales.
 $white-space-list: (nowrap, pre, normal) !default;
 $overflow-wrap-list: (break-word,) !default;
 
-// Effects
+// Effects: register every entry of the effect maps
+// (.rounded-*, .shadow-*, .z-*, .duration-*, .ease-*, .opacity-*).
 @each $key, $value in $radius-map { @include register-utility("rounded-#{$key}", (border-radius: $value)); }
 @each $key, $value in $shadow-map  { @include register-utility("shadow-#{$key}", (box-shadow: $value)); }
 @each $key, $value in $z-layers-map { @include register-utility("z-#{$key}", (z-index: $value)); }
@@ -623,7 +641,8 @@ $overflow-wrap-list: (break-word,) !default;
 @each $key, $value in $transition-timing-map  { @include register-utility("ease-#{$key}", (transition-timing-function: $value)); }
 @each $key, $value in $opacity-values { @include register-utility("opacity-#{$key}", (opacity: $value)); }
 
-// Layout
+// Layout: display, position, overflow, text-align, font-weight and
+// whitespace utilities.
 @each $key, $value in $display-values { @include register-utility($key, (display: $value)); }
 @each $value in $position-values { @include register-utility($value, (position: $value)); }
 @each $value in $overflow-values { @include register-utility("overflow-#{$value}", (overflow: $value)); }
@@ -632,7 +651,7 @@ $overflow-wrap-list: (break-word,) !default;
 @each $value in $white-space-list { @include register-utility("whitespace-#{$value}", (white-space: $value)); }
 @each $value in $overflow-wrap-list { @include register-utility("wrap-#{$value}", (overflow-wrap: $value)); }
 
-// Flexbox
+// Flexbox: direction, wrap and alignment utilities.
 @each $key, $value in $flex-direction-map { @include register-utility("flex-#{$key}", (flex-direction: $value)); }
 @each $value in $flex-wrap-list { @include register-utility("flex-#{$value}", (flex-wrap: $value)); }
 @each $key, $value in $align-items-map { @include register-utility("items-#{$key}", (align-items: $value)); }

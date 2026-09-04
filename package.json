@@ -1,6 +1,6 @@
 {
   "name": "katanakit-css",
-  "version": "0.4.0",
+  "version": "0.4.2",
   "description": "KatanaKIT CSS — a lightweight, modular SCSS mini-framework: design tokens, utility classes and layout mixins (grid, flex, breakpoints) with a @apply-style system. Zero runtime overhead.",
   "keywords": [
     "scss",
@@ -37,20 +37,15 @@
   "sass": "src/scss/main.scss",
   "style": "dist/css/katanakit.css",
   "scripts": {
-    "dev": "vite",
-    "build": "npm run build:css && npm run build:versions && npm run build:demo",
-    "build:all": "npm run build && npm run docs:build",
+    "dev": "astro dev --root site --port 4321",
+    "build": "npm run build:css && astro build --root site",
     "build:css": "sass src/scss/main.scss dist/css/katanakit.css --no-source-map --style=compressed",
-    "build:versions": "sass src/scss/main.scss public/versions/0.1.0.css --no-source-map --style=compressed",
-    "build:demo": "vite build",
-    "preview": "vite preview",
+    "preview": "astro preview --root site",
+    "demo": "vite --config vite.config.mts",
+    "demo:build": "vite build --config vite.config.mts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit",
-    "docs:dev": "astro dev --root site",
-    "docs:build": "astro build --root site",
-    "docs:preview": "astro preview --root site",
-    "release": "yarn exec .github/scripts/release.sh"
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@astrojs/starlight": "^0.42.0",

@@ -1,12 +1,12 @@
 import { defineConfig } from 'vite';
 import purgecss from 'vite-plugin-purgecss';
 
-const PORT = Number(process.env.PORT) || 4321;
+const PORT = Number(process.env.PORT) || 4322;
 
 export default defineConfig({
-  root: '.',
-  // public/ sirve los CSS compilados por build:versions (public/versions/).
-  publicDir: 'public',
+  // Demo lives in demo/ — run with: yarn demo
+  root: 'demo',
+  publicDir: '../public',
   server: {
     port: PORT,
     open: false,
@@ -15,40 +15,27 @@ export default defineConfig({
     hmr: true,
   },
   build: {
-    // La demo va a demo-dist/ para no pisar dist/css/katanakit.css (artefacto npm).
-    outDir: 'demo-dist',
+    outDir: 'dist',
     emptyOutDir: true,
     rollupOptions: {
       input: 'index.html',
     },
   },
   plugins: [
-    // PurgeCSS solo en build (en dev el CSS debe ser completo para HMR).
     purgecss({
-      content: ['./index.html', './demo/**/*.{js,ts}'],
+      content: ['./index.html', './**/*.{js,ts}'],
       defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
       safelist: {
         standard: [
-          /^sm:/,
-          /^md:/,
-          /^lg:/,
-          /^xl:/,
-          /^2xl:/,
-          /^3xl:/,
-          /^hover:/,
-          /^focus:/,
-          /^active:/,
-          /^disabled:/,
-          /^group-hover:/,
-          /^peer-checked:/,
+          /^sm:/, /^md:/, /^lg:/, /^xl:/, /^2xl:/, /^3xl:/,
+          /^hover:/, /^focus:/, /^active:/, /^disabled:/,
+          /^group-hover:/, /^peer-checked:/,
         ],
         deep: [/^data-/],
         greedy: [/^is-/, /^has-/],
       },
       keyframes: true,
       fontFace: true,
-      // Conserva las custom properties de tokens (:root) aunque las clases
-      // utilicen valores literales en vez de var().
       variables: false,
       rejected: false,
     }),
