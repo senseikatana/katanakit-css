@@ -17,16 +17,16 @@ Please also read:
 These rules keep the codebase consistent. Follow them for any contribution.
 
 1. **Modular layering** — keep SCSS modules separated by responsibility:
-   `_functions.scss` (pure functions), `_variables.scss` (design tokens),
-   `_colors.scss` (color palettes/utilities/theme), `_breakpoints.scss`
-   (responsive system), `_grid.scss`, `_flex.scss`, `_reset.scss`,
-   `_theme.scss`, `_apply.scss` (registry) and `partials/utils/` (utility
-   engine). Put new capabilities in the module that owns that concern.
+   `_variables.scss` (design tokens + colors + theme), `_functions.scss`
+   (pure functions), `_mixins.scss` (breakpoints, grid, flex, apply registry,
+   core generators), `_reset.scss` (base reset) and `_utilities.scss`
+   (utility maps + class generators). Put new capabilities in the module that
+   owns that concern.
 
 2. **Modern module syntax only** — use `@use` (always lowercase) and
    `@forward`. Never add new `@import`. Namespace imports explicitly:
    `@use "functions" as f;`. Existing convention for the public namespaces is
-   `f`, `v`, `c`, `bp`, `g`, `fl`, `t`, `u`, `a`.
+   `f`, `v`, `m`, `u`.
 
 3. **Maps are `!default`** — token and utility scales live in Sass maps that
    downstream projects can override with the `with` clause. A new scale means
@@ -39,14 +39,14 @@ These rules keep the codebase consistent. Follow them for any contribution.
 
 5. **Generated classes vs `@apply` registry** — only mixins explicitly emit
    CSS classes. Adding a name to the `@apply` registry does not create a
-   class. Keep the registry synchronised with `utils/_maps.scss` (it already
+   class. Keep the registry synchronised with `_utilities.scss` (it already
    iterates those maps); hand-written registrations must stay minimal.
 
 6. **`main.scss` stays component-free** — the public entry never includes
    `components/_index.scss`; components belong to the demo only.
 
 7. **Partials use a leading underscore** — `_name.scss` inside `src/scss/`,
-   consumed with a namespace. Utils submodules live under `partials/utils/`.
+   consumed with a namespace.
 
 ---
 

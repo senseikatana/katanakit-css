@@ -1,3 +1,8 @@
+---
+title: API Reference
+description: Complete reference of every function, mixin, map and generator.
+---
+
 # API Reference
 
 Complete reference for `katanakit-css` **0.1.0** (unreleased). Every

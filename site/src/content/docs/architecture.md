@@ -1,3 +1,8 @@
+---
+title: Architecture
+description: How KatanaKIT CSS is organized and how the build pipeline works.
+---
+
 # Architecture
 
 This document explains how `katanakit-css` is organised, how the modules

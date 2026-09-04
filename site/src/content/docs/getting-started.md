@@ -1,12 +1,17 @@
+---
+title: Getting Started
+description: Install katanakit-css and write your first styles.
+---
+
 # Getting Started
 
 This guide walks you through installing `katanakit-css` and writing your first
 styles. It assumes basic familiarity with Sass module syntax (`@use`). If you
-are new to the framework, skim the [README](../README.md) first — this guide
-goes a bit deeper on concrete setup options.
+are new to the framework, skim the [Introduction](/katanakit-css/) first —
+this guide goes a bit deeper on concrete setup options.
 
-The full, code-verified API surface lives in
-[API-Reference.md](API-Reference.md).
+The full, code-verified API surface lives in the
+[API Reference](/katanakit-css/api-reference/).
 
 ---
 
@@ -194,9 +199,10 @@ Functions give you the raw colors at build time: `v.get-color("info", 300)`,
 
 ## Where to go next
 
-- [API Reference](API-Reference.md) — complete list of functions, mixins and
-  maps per module.
-- [Architecture](Architecture.md) — module graph and build flow.
-- [Roadmap](Roadmap.md) — shipped and planned work.
-- [Demo](../README.md#run-the-demo-locally) — run `yarn dev` and inspect
-  `index.html` + `demo/main.js` for a working example of everything above.
+- [API Reference](/katanakit-css/api-reference/) — complete list of
+  functions, mixins and maps per module.
+- [Architecture](/katanakit-css/architecture/) — module graph and build flow.
+- [Roadmap](/katanakit-css/roadmap/) — shipped and planned work.
+- [Demo](https://github.com/senseikatana/katanakit-css#run-the-demo-locally) —
+  run `yarn dev` and inspect `index.html` + `demo/main.js` for a working
+  example of everything above.

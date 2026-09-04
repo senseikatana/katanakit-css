@@ -7,7 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-No changes yet beyond the initial `0.1.0` scope below.
+### Added
+
+- **Margin, directional padding, gap-axis, text-size and border-width
+  utility classes** — `.m-*`, `.mx-*`, `.my-*`, `.mt-*`, `.mr-*`, `.mb-*`,
+  `.ml-*`, `.px-*`, `.py-*`, `.pt-*`, `.pr-*`, `.pb-*`, `.pl-*`, `.gap-*`,
+  `.gap-x-*`, `.gap-y-*` (from `$spacing-map`), `.text-xs` … `.text-4xl`
+  (from the new `$font-size-map`) and `.border`, `.border-0`/`2`/`4`/`8`
+  (from the new `$border-width-map`) are now emitted as real CSS classes
+  when the `utilities` module loads. Previously they existed only in the
+  `@apply` registry.
+- **Extended Tailwind-style preflight** — `_reset.scss` now normalises
+  typography (headings, `b`/`strong`, `code`, `small`, `sub`/`sup`, `hr`),
+  lists, links, tables, media, forms (buttons, inputs, placeholders,
+  `summary`, `fieldset`, `legend`, `textarea`) and `[hidden]` on top of the
+  token-driven box-model reset.
+- **Vite demo version switcher** — `demo/version-switcher.js` +
+  `demo/versions.js` toggle between the live dev SCSS and published builds;
+  `yarn build:versions` compiles `public/versions/<tag>.css` for the
+  switcher.
+- **Documentation site** — Astro 7 + Starlight site under `site/` (base
+  `/katanakit-css/`) with a documentation version selector and a
+  `versions/0-1-0` snapshot page.
+- **Vitest** — the test suite migrated from `node --test` to Vitest
+  (`yarn test` → `vitest run`, watch mode via `yarn test:watch`).
+
+### Changed
+
+- Utility spacing, text-size and border-width names, previously available
+  only through the `@apply` registry, are now also generated as CSS classes
+  by `_utilities.scss` (see Added).
 
 ## [0.1.0] - Unreleased
 
@@ -81,6 +110,15 @@ breakpoints) with an `@apply`-style system. Zero runtime overhead.
   regression fixtures (26 tests).
 - **English documentation** — README (root), Getting Started, API Reference,
   Architecture, Roadmap, CONTRIBUTING, SECURITY and this changelog.
+
+### Changed
+
+- **Restructured SCSS architecture from 21 files to 8** (Tailwind-like:
+  base/components/utils pattern). Merged `_colors` into `_variables`, merged
+  `_breakpoints`/`_grid`/`_flex`/`_apply`/`_theme`/`_core` into `_mixins`,
+  merged `_maps`/`_spacing`/`_sizing`/`_flex`/`_effects`/`_layout`/`_index`
+  into `_utilities`. Simplified load paths from `src/scss/partials` to
+  `src/scss`.
 
 ### Fixed
 

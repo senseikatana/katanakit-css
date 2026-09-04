@@ -1,3 +1,8 @@
+---
+title: Roadmap
+description: What is shipped and what is planned.
+---
+
 # Roadmap
 
 A living list of where `katanakit-css` (SCSS mini-framework) is heading.
@@ -11,8 +16,8 @@ Legend: `[x]` done · `[ ]` planned (no commitment to an order).
 ## Current status
 
 The framework is at **0.1.0 (unreleased)**. The shipped scope is documented in
-[CHANGELOG.md](../CHANGELOG.md); the API in
-[API-Reference.md](API-Reference.md).
+[CHANGELOG.md](https://github.com/senseikatana/katanakit-css/blob/main/CHANGELOG.md); the API in the
+[API Reference](/katanakit-css/api-reference/).
 
 ## Shipped for 0.1.0
 
@@ -103,4 +108,4 @@ The framework is at **0.1.0 (unreleased)**. The shipped scope is documented in
 
 If you want to tackle a planned item, open an issue first so the approach is
 agreed (some items touch breaking API decisions). See
-[CONTRIBUTING.md](../CONTRIBUTING.md) for the development workflow.
+[CONTRIBUTING.md](https://github.com/senseikatana/katanakit-css/blob/main/CONTRIBUTING.md) for the development workflow.
