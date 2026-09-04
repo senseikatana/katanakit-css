@@ -1,463 +1,603 @@
-# Katana Kami — SCSS Mini Framework
+# KatanaKIT CSS
 
-A lightweight, modular SCSS framework for rapid UI development.
-Design-token driven, fully typed-friendly, zero-runtime overhead.
+A lightweight, modular **SCSS mini-framework**: design tokens, utility classes
+and layout mixins (grid, flex, breakpoints) with an `@apply`-style system.
+Zero runtime overhead — it compiles to plain static CSS.
+
+> `katanakit-css` is **version 0.1.0** (unreleased) and is a different,
+> sibling project to the TypeScript library `katanakit-js`. Everything on this
+> page refers to the **CSS/SCSS** framework in this repository.
 
 ---
 
-## Quick Start
+## Table of contents
+
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Quick start](#quick-start)
+  - [Option A — precompiled CSS](#option-a--precompiled-css)
+  - [Option B — full SCSS entry](#option-b--full-scss-entry)
+  - [Option C — compose your own sheet](#option-c--compose-your-own-sheet)
+- [Design tokens and how to override them](#design-tokens-and-how-to-override-them)
+- [Colors](#colors)
+- [Breakpoints](#breakpoints)
+- [Grid and flex mixins](#grid-and-flex-mixins)
+- [Utility classes](#utility-classes)
+- [The apply system](#the-apply-system)
+- [Dark theme](#dark-theme)
+- [Example components](#example-components)
+- [Run the demo locally](#run-the-demo-locally)
+- [Scripts](#scripts)
+- [Project structure](#project-structure)
+- [Documentation](#documentation)
+- [Brand color reference](#brand-color-reference)
+- [License](#license)
+
+---
+
+## Features
+
+- **Design tokens as CSS custom properties** — fonts, shadows, containers,
+  spacing, radius, z-layers, durations and easings exposed on `:root`
+  (`--font-*`, `--shadow-*`, `--container-*`, `--spacing-*`, `--radius-*`,
+  `--z-*`, `--duration-*`, `--ease-*`).
+- **Color system** — six semantic palettes (`neutral`, `purple`, `info`,
+  `warning`, `danger`, `success`) with **7 tones each** (100–700), plus four
+  special colors (`white`, `black`, `transparent`, `current`). CSS variables,
+  utility classes (text, background, border, hover) and theme support.
+- **Utility class generation from maps** — sizing, flexbox, effects and layout
+  generators driven by `!default` maps; padding classes are active out of the
+  box.
+- **`@apply`-style system** — a small registry that lets you compose utilities
+  inside your own component rules (`@include a.apply(...)`), with a registry
+  automatically kept in sync with the utility maps.
+- **Layout mixins** — responsive grid (auto-fill/fit, fixed columns, areas,
+  stacking, subgrid), flexbox container/item helpers and CSS Grid
+  composition mixins.
+- **Responsive system** — seven mobile-first breakpoints with a generic
+  `breakpoint()` mixin (`up`/`down`/`only`/`between`), named aliases
+  (`xs` … `xxxl`, `*-down`) and feature queries (portrait, landscape,
+  reduced-motion, hoverable, touch, dark-mode, light-mode).
+- **Pure functions** — unit conversion (`rem()`, `px()`, `to-unit()`,
+  `strip-unit()`), fluid type (`fluid()` → `clamp()`) and color helpers
+  (`tint()`, `shade()`, `contrast()`, …).
+- **Modern CSS reset** — box-sizing, margin/padding zeroing and sensible media
+  defaults exposed as overrideable custom properties.
+- **No runtime** — everything is resolved at build time by the Sass compiler.
+
+---
+
+## Requirements
+
+- **Node.js + a Sass compiler** to consume the SCSS source (Dart Sass is the
+  only compiler exercised; `sass` is a devDependency). The precompiled CSS in
+  `dist/` needs no tooling at all.
+- To run the local demo or the test suite you also need `yarn` (or npm).
+- Compatible with any bundler/build that can run Sass; Vite is used for the
+  demo but is **not** required to use the library.
+
+---
+
+## Installation
 
 ```bash
-npm install -D sass
+npm install katanakit-css
+# or
+yarn add katanakit-css
 ```
 
-```scss
-// main.scss — importa todo y genera utilities
-@use "reset";
-@use "functions" as f;
-@Use "variables" as v;
-@Use "breakpoints" as bp;
-@Use "colors" as c;
-@Use "grid" as g;
-@Use "utils";
+The package exposes two consumption entry points (see `package.json`):
 
-// Genera tokens CSS en :root
-@include v.k-generate-css-tokens();
+| Field    | Value                            | Purpose                          |
+| -------- | -------------------------------- | -------------------------------- |
+| `style`  | `dist/css/katanakit.css`         | precompiled, minified full sheet |
+| `sass`   | `src/scss/main.scss`             | SCSS entry for `@use`            |
+| `files`  | `src/scss`, `dist/css`, `README` | what gets published              |
 
-// Genera variables CSS de colores y clases de utilidad
-@include c.generate-css-vars();
-@include c.all-utilities();
-
-// Genera todas las utilities (margin, padding, flex, grid, sizing, etc.)
-@include utils.generate-all-utilities();
-```
-
-Compile:
-
-```bash
-npx sass src/scss/main.scss dist/css/main.css --watch
-```
+Published files include `src/scss`, `dist/css`, `README.md`, `LICENSE` and
+`CHANGELOG.md`.
 
 ---
 
-## File Structure
+## Quick start
 
-```
-src/scss/
-  _functions.scss        # Unit conversion (rem, px, to-unit, strip-unit), fluid sizing
-  _variables.scss        # Design tokens, access functions, CSS token generator
-  _breakpoints.scss      # Breakpoint mixins (generic + named aliases + feature queries)
-  _colors.scss           # Color palettes, CSS var generation, utility classes, themes
-  _grid.scss             # Grid system mixins (auto-fit, subgrid, masonry, etc.)
-  _flex.scss             # Flexbox layout mixins (flex-container, flex-center, etc.)
-  _reset.scss            # Modern reset (+ custom properties en :root)
-  _theme.scss            # Theme hook (por completar)
-  _apply.scss            # Registro de utilidades para @apply
-  partials/_utils.scss   # Fachada → re-exporta partials/utils/
-  partials/utils/
-    _index.scss          # Índice + @mixin generate-all-utilities()
-    _core.scss           # Mixins genéricos (vars CSS, centrado, generadores)
-    _maps.scss           # Tokens: sizing, spacing, flex, efectos, texto, layout
-    _spacing.scss        # p-* y .gap (activo por defecto)
-    _sizing.scss         # w/h/min/max (ópt-in)
-    _flex.scss           # flex-, items-, justify-, gap-* (ópt-in)
-    _effects.scss        # .shadow, .rounded + shadow/radius/z/transition (ópt-in)
-    _layout.scss         # display, position, overflow, texto (ópt-in)
-  components/
-    _index.scss          # Estilos personalizados usando @apply (ejemplos)
-  main.scss              # Entry point — imports all modules and includes generators
+### Option A — precompiled CSS
+
+Reference the bundled stylesheet directly:
+
+```html
+<link rel="stylesheet" href="/node_modules/katanakit-css/dist/css/katanakit.css" />
 ```
 
----
+Or import it from your JavaScript entry (bundlers resolve the CSS file for
+you):
 
-## `_functions.scss`
+```js
+import "katanakit-css/dist/css/katanakit.css";
+```
 
-Utility functions for unit conversion, color manipulation, and fluid sizing.
+This sheet contains everything: the reset, all token custom properties, all
+color utilities and all utility classes generated by
+`generate-all-utilities()` (no components — components are opt-in SCSS).
 
-| Function | Description | Example |
-|----------|-------------|---------|
-| `rem($size)` | Converts px to rem (base 10) | `f.rem(16)` → `1.6rem` |
-| `px($size)` | Converts rem to px | `f.px(1.6)` → `16px` |
-| `strip-unit($value)` | Removes unit from a number | `f.strip-unit(16px)` → `16` |
-| `to-unit($value, $unit)` | Converts to specified unit | `f.to-unit(16, "rem")` |
-| `tint($color, $amount)` | Mixes color with white | `f.tint(#3498db, 20%)` |
-| `shade($color, $amount)` | Mixes color with black | `f.shade(#3498db, 20%)` |
-| `complement($color)` | Returns complementary color | `f.complement(#ff0000)` |
-| `contrast($color, $light, $dark)` | Returns best contrast color | `f.contrast(#3498db)` |
-| `fluid($min, $max, $min-vw, $max-vw)` | Generates `clamp()` for fluid sizing | `f.fluid(16px, 24px)` |
+### Option B — full SCSS entry
+
+`src/scss/main.scss` is the public "full sheet" entry. Import it and you get
+reset + tokens + color utilities + all utility generators:
 
 ```scss
-@use "functions" as f;
-
-.element {
-  font-size: f.rem(16);          // 1.6rem
-  width: f.fluid(320px, 1200px);  // clamp(320px, ..., 1200px)
-}
+// main.scss
+@use "katanakit-css/src/scss/main";
 ```
 
----
+If you use your own Sass entry you must configure tokens *before* loading the
+sheet (see [override tokens](#design-tokens-and-how-to-override-them)).
 
-## `_variables.scss`
+### Option C — compose your own sheet
 
-Centralized design tokens. All maps are `!default` so you can override before importing.
-The CSS custom property prefix is `$k-prefix: "k"` (emits `--k-*` variables).
-
-### Maps
-
-| Token | Map Name | Keys |
-|-------|----------|------|
-| Font families | `$font-families` | `sans-serif`, `serif`, `monospace` |
-| Shadows | `$shadow-sizes` | `none`, `sm`, `default`, `md`, `lg`, `xl`, `2xl`, `inner` |
-| Containers | `$container-sizes` | `xs` … `3xl` (px values) |
-| Breakpoints | `$breakpoint-sizes` | `xs` … `3xl` (px values) |
-| Spacing | `$spacing-sizes` | `0`, `px`, `0.5` … `96` (rem) |
-| Radius | `$radius-sizes` | `none`, `sm`, `default`, `md`, `lg`, `xl`, `2xl`, `3xl`, `full` |
-| Z-index | `$z-layers` | `auto`, `0`–`50`, `dropdown`, `sticky`, `fixed`, `modal`, `popover`, `tooltip` |
-| Durations | `$transition-durations` | `75`, `100`, `150`, `200`, `300`, `500`, `700`, `1000` (ms) |
-| Easings | `$transition-easings` | `linear`, `in`, `out`, `in-out` |
-
-### Access Functions
+`main.scss` is deliberately tiny; every partial can be imported individually
+(all `@use` calls are lowercase, modern module syntax):
 
 ```scss
-@Use "variables" as v;
+// theme.scss — a custom sheet: reset + tokens + a few utilities
+@use "katanakit-css/src/scss/partials/reset";
+@use "katanakit-css/src/scss/partials/variables" as v;
+@use "katanakit-css/src/scss/partials/functions" as f;
+@use "katanakit-css/src/scss/partials/breakpoints" as bp;
+@use "katanakit-css/src/scss/partials/colors" as c;
+@use "katanakit-css/src/scss/partials/grid" as g;
+@use "katanakit-css/src/scss/partials/flex" as fl;
+@use "katanakit-css/src/scss/partials/utils" as u;
+@use "katanakit-css/src/scss/partials/apply" as a;
 
-v.k-font-family("sans-serif")  // font stack
-v.k-shadow("md")               // shadow value
-v.k-container("xl")            // container max-width
-v.k-breakpoint("md")           // breakpoint value
-v.k-spacing(4)                 // 1rem
-v.k-radius("lg")               // 0.5rem
-v.k-z("modal")                 // z-index value
-v.k-duration(200)              // 200ms
-v.k-ease("out")                // cubic-bezier
-```
-
-### CSS Custom Property Generator
-
-```scss
-@include v.k-generate-css-tokens();
-```
-
-Emits all tokens as `:root` CSS variables:
-
-```css
-:root {
-  --k-font-sans-serif: ui-sans-serif, system-ui, ...;
-  --k-spacing-4: 1rem;
-  --k-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), ...;
-  --k-radius-lg: 0.5rem;
-  /* ... */
-}
-```
-
----
-
-## `_breakpoints.scss`
-
-Responsive mixins powered by `$breakpoints` (mobile-first).
-
-### Maps
-
-| Key | Value |
-|-----|-------|
-| `xs` | `0` (mobile-first baseline) |
-| `sm` | `640px` |
-| `md` | `768px` |
-| `lg` | `1024px` |
-| `xl` | `1280px` |
-| `2xl` | `1536px` (mixin alias: `xxl`) |
-| `3xl` | `1920px` (mixin alias: `xxxl`) |
-
-> **Note:** Mixin names `xxl` and `xxxl` map to breakpoint keys `"2xl"` and `"3xl"` because SCSS mixin names cannot start with a digit.
-
-### Generic Mixin
-
-```scss
-@include bp.breakpoint($from, $direction: up, $to: null)
-```
-
-| Direction | Behavior |
-|-----------|----------|
-| `up` | `min-width` (default) |
-| `down` | `max-width` (anti-overlap: `−0.02px`) |
-| `only` | Between `$from` and next breakpoint |
-| `between` | Between `$from` and `$to` |
-
-### Named Aliases
-
-```scss
-@include bp.xs { … }        // 0 and up
-@include bp.sm { … }        // 640px and up
-@include bp.md { … }        // 768px and up
-@include bp.lg { … }        // 1024px and up
-@include bp.xl { … }        // 1280px and up
-@include bp.xxl { … }       // 1536px and up
-@include bp.xxxl { … }      // 1920px and up
-
-@include bp.sm-down { … }   // below 640px
-@include bp.md-down { … }   // below 768px
-```
-
-### Feature Queries
-
-```scss
-@include bp.portrait       // orientation: portrait
-@include bp.landscape      // orientation: landscape
-@include bp.reduced-motion // prefers-reduced-motion: reduce
-@include bp.hoverable      // hover: hover + fine pointer
-@include bp.touch          // hover: none + coarse pointer
-@include bp.dark-mode      // prefers-color-scheme: dark
-@include bp.light-mode     // prefers-color-scheme: light
-```
-
----
-
-## `_colors.scss`
-
-Color system with 6 palettes + 4 special colors.
-
-### Palettes
-
-Each palette has 5 numeric shades: `100`, `200`, `300`, `400`, `500`.
-
-| Palette | Purpose |
-|---------|---------|
-| `neutral` | Grayscale |
-| `info` | Blue |
-| `amber` | Warm amber |
-| `danger` | Red/critical |
-| `success` | Green |
-| `warning` | Yellow/amber |
-
-**Special:** `white`, `black`, `transparent`, `current`
-
-### Access Functions
-
-```scss
-@Use "colors" as c;
-
-c.get-color("info", 300)        // Info shade 300
-c.get-color("info", 500, 0.5)   // With alpha
-c.get-color("white")            // Special color (no shade)
-c.get("info")                   // Alias for shade 500
-c.alpha("info", 300, 0.5)       // With custom alpha
-```
-
-### Generators
-
-```scss
-// Emit CSS custom properties for colors
+// Tokens and color variables in :root
+@include v.generate-css-tokens();
 @include c.generate-css-vars();
 
-// Emit utility classes
-@include c.text-utilities();           // .text-info-300, .text-gray-100, .text-white
-@include c.bg-utilities();             // .bg-info-500, .bg-neutral-100, .bg-black
-@include c.border-utilities();         // .border-info-300, .border-white
-@include c.hover-utilities();          // .hover-bg-info-300:hover, .hover-text-info-500:hover
+// Color utilities only (text/bg/border + hover) — skip what you do not need
+@include c.text-utilities();
+@include c.bg-utilities();
 
-// Or everything at once
-@include c.all-utilities();
-
-// Theme (dark mode) with automatic inversion
-@include c.theme("dark");
+// Opt-in utility generators, or nothing at all
+@include u.generate-all-utilities();
 ```
 
-### CSS Variable Access
+Loading the `utils` module already emits a small set of automatic classes
+(`.p-*`, `.gap`, `.shadow`, `.rounded`); everything else is generated by the
+generators above. See [Utility classes](#utility-classes).
 
-Color CSS variables are available on `:root`:
-
-```css
-:root {
-  --info-300: hsl(217, 91%, 60%);
-  --neutral-500: hsl(220, 13%, 6%);
-  --white: white;
-  --black: black;
-}
-```
-
-Use in custom CSS: `background: var(--info-300);`
+> **Naming note.** Utility class keys are literal strings — dots and hyphens
+> are kept as-is (`.p-05`, `.p-1-5`, `.p-2-5`, `.p-base`, `.w-screen`). There
+> is no Tailwind-style bracket conversion.
 
 ---
 
-## `_grid.scss`
+## Design tokens and how to override them
 
-Modern CSS Grid mixins with zero bloat.
+Tokens live in `src/scss/partials/_variables.scss` as `!default` maps, exposed
+as CSS custom properties by `generate-css-tokens()`:
 
-| Mixin | Description |
-|-------|-------------|
-| `grid-responsive($min, $mode, $max, $gap)` | Auto-fill or auto-fit columns |
-| `grid-autofill($min, $max, $gap)` | Alias for auto-fill |
-| `grid-autofit($min, $max, $gap)` | Alias for auto-fit |
-| `grid-container($cols, $gap, …)` | Fixed column grid with alignment |
-| `grid-gap($value, $var-name)` | Gap via CSS custom property |
-| `grid-span($cols, $rows)` | Span N columns/rows |
-| `grid-place($col-start, $col-end, …)` | Explicit placement |
-| `grid-breakpoint-columns($map, $gap, …)` | Responsive column counts |
-| `grid-center($gap)` | Center content on both axes |
-| `subgrid($axis)` | Subgrid support |
-| `grid-masonry($axis, $gap)` | Masonry layout (experimental) |
-| `grid-fixed-columns($col-width, $gap)` | Fixed-width column repeat |
+| Family                | Map                  | Keys                                                         | Example variables              |
+| --------------------- | -------------------- | ------------------------------------------------------------ | ------------------------------ |
+| Font families         | `$font-families`     | `sans-serif`, `serif`, `mono`                                | `--font-sans-serif`            |
+| Shadows               | `$shadow-sizes`      | `default`, `sm`, `md`, `lg`, `xl`, `2xl`, `inner`            | `--shadow-md`                  |
+| Container sizes       | `$container-sizes`   | `sm` … `6xl` (9 sizes)                                       | `--container-xl`               |
+| Breakpoints           | `$breakpoint-sizes`  | `xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`                   | (used by breakpoints module)   |
+| Spacing               | `$spacing-scale`     | `0`, `1` … `32` (rem steps)                                  | `--spacing-4`                  |
+| Border radius         | `$radius`            | `default`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`, `full`      | `--radius-lg`                  |
+| Z-index layers        | `$z-layers`          | `auto`, `0`–`50`, `dropdown`, `sticky`, `fixed`, `modal`, `popover`, `tooltip` | `--z-modal`       |
+| Transition durations  | `$transition-durations` | `75`–`1000` (ms)                                          | `--duration-200`               |
+| Transition easings    | `$transition-easings` | `linear`, `in`, `out`, `in-out`                             | `--ease-in-out`                |
+
+Accessor functions let you read a token at build time and accept a string or a
+number depending on the key type:
 
 ```scss
-@Use "grid" as g;
+@use "katanakit-css/src/scss/partials/variables" as v;
 
-.cards {
-  @include g.grid-autofill(280px, $gap: 1.5rem);
-}
-
-.dashboard {
-  @include g.grid-container(12, 2rem);
+.demo {
+  padding: v.spacing(4);            // 1rem
+  border-radius: v.radius("lg");    // 0.5rem
+  z-index: v.z(50);                 // 50  (number accepted)
+  z-index: v.z("modal");            // 1040
+  transition-duration: v.duration(200);      // 200ms
+  transition-timing-function: v.ease("out"); // cubic-bezier(...)
+  font-family: v.font-family("sans-serif");
+  box-shadow: v.shadow("md");
+  max-width: v.container("xl");
+  @media (min-width: v.breakpoint("lg")) { /* … */ }
 }
 ```
 
----
-
-## `_utils.scss`
-
-Sistema de utilidades modularizado. `partials/_utils.scss` es solo una fachada que
-re-exporta las piezas de `partials/utils/`:
-
-| Módulo | Contenido | Estado |
-|--------|-----------|--------|
-| `core` | Mixins genéricos (`vars-list`, `vars-map`, centrado, `utils-classes`, `utils-classes-hover`) | mixins |
-| `maps` | Tokens: `$sizing-map`, `$spacing-map`, `$flex-*`, `$shadow-map`, `$radius-map`, `$z-layers-map`, transiciones, opacidad, texto, layout | datos |
-| `spacing` | `.p-{n}` + `.gap` | **activo al importar** |
-| `sizing` | `get-sizing-classes()` → `w/h/min/max` | ópt-in |
-| `flex` | `generate-flex-utilities()` → `flex-*`, `items-*`, `justify-*`, `gap-*` | ópt-in |
-| `effects` | `.shadow`, `.rounded` + `generate-effects-utilities()` → `shadow-*`, `rounded-*`, `z-*`, `duration-*`, `ease-*`, `opacity-*` | base activa + ópt-in |
-| `layout` | `generate-layout-utilities()` → display, position, overflow, texto | ópt-in |
-
-Genera todas las utilidades ópt-in con `@include utils.generate-all-utilities();`.
-
-### Margin & Padding
-
-Classes `.m-{n}`, `.p-{n}`, and directional variants (`mt`, `mr`, `mb`, `ml`, `mx`, `my`, `pt`, `pr`, `pb`, `pl`, `px`, `py`) for each value in `$spacing-sizes`.
-
-**Note:** Numeric keys with dots use hyphens: `0.5` → `.m-0-5`, `.p-0-5`.
-
-### Gap
-
-`.gap-{n}`, `.gap-x-{n}`, `.gap-y-{n}` for each spacing value.
-
-### Sizing
-
-`.w-{n}`, `.h-{n}`, `.min-w-{n}`, `.min-h-{n}`, `.max-w-{n}`, `.max-h-{n}`.
-Also: `.w-full`, `.w-screen`, `.h-full`, `.h-screen`, `.mx-auto`.
-
-### Border Radius
-
-`.rounded-none`, `.rounded-sm`, `.rounded-default`, `.rounded-md`, `.rounded-lg`, `.rounded-xl`, `.rounded-2xl`, `.rounded-3xl`, `.rounded-full`.
-
-### Shadows
-
-`.shadow-none`, `.shadow-sm`, `.shadow-default`, `.shadow-md`, `.shadow-lg`, `.shadow-xl`, `.shadow-2xl`, `.shadow-inner`.
-
-### Z-Index
-
-`.z-auto`, `.z-0`, `.z-10` … `.z-tooltip`.
-
-### Display
-
-`.block`, `.inline`, `.inline-block`, `.flex`, `.inline-flex`, `.grid`, `.inline-grid`, `.hidden`.
-
-### Flexbox
-
-`.flex-row`, `.flex-col`, `.flex-wrap`, `.flex-nowrap`, `.items-{start|center|end|stretch}`, `.justify-{start|center|end|between|around|evenly}`, `.flex-1`, `.flex-2`.
-
-### Position
-
-`.static`, `.relative`, `.absolute`, `.fixed`, `.sticky`.
-
-### Text
-
-`.text-left`, `.text-center`, `.text-right`, `.text-justify`, `.text-{n}` (font size).
-
-### Font Weight
-
-`.font-normal`, `.font-medium`, `.font-semibold`, `.font-bold`.
-
-### Grid Columns
-
-`.grid-cols-1` … `.grid-cols-12`, `.col-span-1` … `.col-span-12`.
-
-### Overflow
-
-`.overflow-auto`, `.overflow-hidden`, `.overflow-visible`, `.overflow-scroll`, `.overflow-x-auto`, etc.
-
-### Border Width
-
-`.border`, `.border-0`, `.border-2`, `.border-4`, `.border-8`, and directional variants (`.border-t-2`, `.border-l-4`, etc.).
-
-### Color Utilities (from `_colors.scss`)
-
-`.text-{palette}-{shade}`, `.bg-{palette}-{shade}`, `.border-{palette}-{shade}` for all palettes and shades.
-Plus: `.text-white`, `.text-black`, `.text-transparent`, `.text-current`.
-Hover variants: `.hover-text-{palette}-{shade}`, `.hover-bg-{palette}-{shade}`.
-
----
-
-## Overriding Tokens
-
-Override any map **before** importing the framework:
+All token maps are `!default`, so you can override them with the standard Sass
+`with` clause **before** the sheet loads the module:
 
 ```scss
-// _config.scss
-$k-prefix: "myapp" !default;
-
-$spacing-sizes: (
-  4: 1.5rem,
-  // ...
+// 1) Configure the tokens first — must be the first load of the variables
+//    module in the compilation.
+@use "katanakit-css/src/scss/partials/variables" with (
+  $font-families: ("sans-serif": (system-ui, sans-serif), "mono": (monospace)),
+  $breakpoint-sizes: ("xs": 0, "sm": 600px, "md": 900px, "lg": 1200px, "xl": 1400px, "2xl": 1600px, "3xl": 1920px),
+  $spacing-scale: ("0": 0, "1": 0.25rem, "2": 0.5rem, "3": 0.75rem, "4": 1rem, "6": 1.5rem, "8": 2rem)
 );
 
-@use "variables" as v;
-@use "utils";
-
-@include utils.generate-all-utilities();
+// 2) Then load whatever consumes the module (the full sheet, or partials).
+@use "katanakit-css/src/scss/main";
 ```
+
+**Important:** a Sass module can only be configured once per compilation, so
+the `with` clause must be the first usage of the `variables` module.
 
 ---
 
-## Complete Example
+## Colors
+
+Colors live in `src/scss/partials/_colors.scss`. Six palettes of seven tones
+each (100 is the lightest, 700 the darkest):
+
+| Palette   | Hue / character              |
+| --------- | ---------------------------- |
+| `neutral` | gray scale, saturation 0%    |
+| `purple`  | violet, ~269°                |
+| `info`    | blue, ~215°                  |
+| `warning` | yellow, ~49°                 |
+| `danger`  | red, ~3°                     |
+| `success` | green, ~147°                 |
+
+Plus `$special-colors`: `black`, `white`, `transparent`, `current`
+(currentColor).
+
+Use the accessors from SCSS:
 
 ```scss
-@use "reset";
-@Use "functions" as f;
-@Use "variables" as v;
-@Use "breakpoints" as bp;
-@Use "colors" as c;
-@Use "grid" as g;
-@Use "utils";
+@use "katanakit-css/src/scss/partials/colors" as c;
 
-@include v.k-generate-css-tokens();
-@include c.generate-css-vars();
-@include c.all-utilities();
-@include utils.generate-all-utilities();
+.box {
+  color: c.get-color("neutral", 500);       // 7th shade
+  color: c.get-color("info", 300, 0.5);     // with alpha
+  background: c.get("info");                // shorthand for shade 500
+  border-color: c.alpha("warning", 400, 0.25);
+}
+```
 
-.hero {
-  @include g.grid-autofill(300px, $gap: 2rem);
+Generate custom properties and/or utility classes with the color mixins:
+
+```scss
+@include c.generate-css-vars();        // --neutral-100 … --success-700, --white, …
+@include c.all-utilities();            // .text-*, .bg-*, .border-*, hover variants
+```
+
+```html
+<body class="bg-neutral-100 text-neutral-500">
+  <p class="text-info-500">Info</p>
+  <button class="bg-white hover-bg-info-300 text-black">Hover me</button>
+</body>
+```
+
+Color utilities can be filtered by palette and specials toggled off, e.g.
+`@include c.all-utilities("info", false)` or
+`@include c.text-utilities((neutral, success))`. See
+[docs/API-Reference.md](docs/API-Reference.md#colors-as-c) for the full
+signatures.
+
+---
+
+## Breakpoints
+
+Breakpoints are defined in `partials/_breakpoints.scss`:
+
+`xs` 0 · `sm` 640 · `md` 768 · `lg` 1024 · `xl` 1280 · `2xl` 1536 · `3xl` 1920
+(px).
+
+Use the generic mixin for `up`, `down`, `only` and `between` (the alias `bp`
+accepts the same arguments):
+
+```scss
+@use "katanakit-css/src/scss/partials/breakpoints" as bp;
+
+.card {
+  padding: 1rem;
+
+  @include bp.breakpoint("md", up) { padding: 2rem; }
+  @include bp.breakpoint("sm", down) { padding: 0.5rem; }
+  @include bp.breakpoint("md", only, "lg") { /* only md */ }
+  @include bp.breakpoint("sm", between, "lg") { /* sm ≤ viewport < lg */ }
+}
+```
+
+Or use the named mixins (all mobile-first `up`, plus `*-down`):
+
+```scss
+@include bp.md { /* ≥ 768px */ }
+@include bp.lg-down { /* < 1024px */ }
+
+@include bp.xxl { /* ≥ 1536px  (alias of the 2xl key) */ }
+@include bp.xxxl { /* ≥ 1920px  (alias of the 3xl key) */ }
+@include bp.x2l-down { /* < 1536px */ }
+@include bp.xxl-down { /* canonical alias of x2l-down */ }
+```
+
+Feature queries are first-class mixins: `bp.portrait`, `bp.landscape`,
+`bp.reduced-motion`, `bp.hoverable`, `bp.touch`, `bp.dark-mode`,
+`bp.light-mode`.
+
+---
+
+## Grid and flex mixins
+
+Mixins output the CSS you need without utility-class scaffolding.
+
+**Grid** (`partials/_grid.scss`, namespace `as g`):
+
+```scss
+@use "katanakit-css/src/scss/partials/grid" as g;
+
+.gallery {
+  @include g.grid-responsive(240px, fill, 1fr, 1rem); // auto-fill columns
+  @include g.grid-autofit(240px, 1fr);                 // auto-fit
 }
 
-.btn-primary {
-  background: c.get-color("info", 500);
-  padding: v.k-spacing(3) v.k-spacing(5);
-  border-radius: v.k-radius("default");
-  box-shadow: v.k-shadow("sm");
+.layout {
+  @include g.grid-container(12, null, 1rem);           // 12 equal columns
+  > main { @include g.grid-placement(1, 8, 1, null); } // place an item
+  > aside { @include g.grid-span(4); }                 // span 4 columns
+}
+```
+
+Other mixins: `grid-center`, `grid-gap`, `grid-areas`/`grid-area`,
+`grid-item-center`, `grid-item-full`, `grid-breakpoint-columns`,
+`grid-fixed-columns`, `subgrid`, `grid-masonry` (experimental), and the
+`grid-stack`/`grid-stack-item` pair for stacking children in the same cell.
+
+**Flex** (`partials/_flex.scss`, namespace `as fl`):
+
+```scss
+@use "katanakit-css/src/scss/partials/flex" as fl;
+
+.nav {
+  @include fl.flex-container(row, nowrap, 0.5rem, center, space-between);
+}
+.hero { @include fl.flex-center(1rem); }
+.hero .title { @include fl.flex-item(1, 1, auto); }
+```
+
+Also available: `flex-gap`, `flex-grow`, `flex-shrink`, `flex-basis`,
+`flex-item`, `flex-item-center`, `flex-item-full`.
+
+---
+
+## Utility classes
+
+Utility classes are generated from the maps in `partials/utils/_maps.scss`.
+They fall into three groups:
+
+### 1. Automatic (emitted when the `utils` module is loaded)
+
+| Classes                | Property     | Source         |
+| ---------------------- | ------------ | -------------- |
+| `.p-{key}` for every key of `$spacing-map` (`p-0`, `p-05`, `p-base`, `p-1`, `p-1-5`, `p-2-5`, `p-3-5`, `p-4` … `p-96`) | `padding` | `$spacing-map` |
+| `.gap`                 | `gap: 1rem`  | hard-coded     |
+| `.shadow`              | default `box-shadow` | hard-coded |
+| `.rounded`             | `border-radius: 0.25rem` | hard-coded |
+
+### 2. Color utilities (`colors.all-utilities()`)
+
+`.text-{palette}-{shade}`, `.bg-{palette}-{shade}`,
+`.border-{palette}-{shade}`, `.hover-text-{palette}-{shade}:hover`,
+`.hover-bg-{palette}-{shade}:hover` for every palette × shade, plus
+`.text-white`, `.bg-white`, `.hover-bg-transparent`, … for special colors.
+
+### 3. Opt-in generators (invoked by `main.scss`)
+
+`generate-all-utilities()` calls the four generators below. Include them
+individually if you compose your own sheet.
+
+| Generator            | Classes generated (from `_maps.scss`)                                    |
+| -------------------- | ------------------------------------------------------------------------ |
+| `sizing.get-sizing-classes`   | `w-*`, `min-w-*`, `max-w-*`, `h-*`, `min-h-*`, `max-h-*` (keys of `$sizing-map`, e.g. `.w-full`, `.w-screen` = `100vw`, `.w-auto`) |
+| `flex.generate-flex-utilities` | `flex-row`, `flex-col`, `flex-row-reverse`, `flex-col-reverse`, `flex-wrap`, `flex-nowrap`, `items-start/center/end/stretch`, `justify-start/center/end/between/around/evenly`, `gap-0`…`gap-8` |
+| `effects.generate-effects-utilities` | `shadow-none/sm/md/lg/xl/2xl/inner`, `rounded-none/sm/md/lg/xl/2xl/3xl/full`, `z-auto/0/10/…/50/dropdown/sticky/fixed/modal/popover/tooltip`, `duration-75`…`duration-1000`, `ease-linear/in/out/in-out`, `opacity-0`…`opacity-100` |
+| `layout.generate-layout-utilities` | display (`.block`, `.inline-block`, `.inline`, `.flex`, `.inline-flex`, `.grid`, `.inline-grid`, `.table`, `.table-row`, `.table-cell`, `.hidden` = `display:none`, `.contents`), position (`.static`, `.fixed`, `.absolute`, `.relative`, `.sticky`), `.overflow-auto/hidden/scroll/visible`, `.text-left/center/right/justify`, `.font-thin`…`.font-black` (100–900), `.whitespace-nowrap/pre/normal`, `.wrap-break-word` |
+
+**What is NOT generated as a CSS class** (you will not find them in the
+compiled sheet, even though their names exist in the `@apply` registry —
+see next section): margin/directional padding classes (`.m-*`, `.px-*`,
+`.pt-*`, …), `text-xs`…`text-4xl` font sizes, `.flex-1`, `.grid-cols-*`,
+`.col-span-full`, `.border`, `.transition*`, `gap-x-*`/`gap-y-*`.
+
+> **Spacing naming.** Utility spacing comes from `$spacing-map`, whose keys
+> are literal (`"05"` = `0.125rem`, `"1-5"` = `0.375rem`, `"2-5"` = `0.625rem`,
+> `"3-5"` = `0.875rem`, `"base"` = `1px`). So the classes are `.p-05`,
+> `.p-1-5`, `.p-2-5`, `.p-3-5` and `.p-base` — not `.p-0.5` or `.p-px`.
+
+---
+
+## The apply system
+
+`partials/_apply.scss` implements a tiny `@apply` emulation for SCSS. Register
+a named utility, then compose it inside any rule:
+
+```scss
+@use "katanakit-css/src/scss/partials/apply" as a;
+
+// Custom utility (registered once, module level)
+@include a.register-utility("text-shadow-soft", (text-shadow: 0 1px 2px rgb(0 0 0 / 0.2)));
+
+.card {
+  @include a.apply(flex, flex-col, p-4, rounded-lg, shadow-md, bg-white);
 
   &:hover {
-    background: c.get-color("info", 300);
+    @include a.apply(shadow-lg);
   }
 }
 ```
 
+The registry is populated automatically at module load from the *same*
+`_maps.scss` source of truth that drives the class generators, plus a set of
+handy hard-coded utilities. Available names include:
+
+- **Display/flex/spacing** — `block`, `inline-flex`, `hidden`, `flex-row`,
+  `flex-col`, `flex-wrap`, `items-center`, `justify-between`, and every
+  combination over `$spacing-map` for `p/px/py/pt/pb/pl/pr`,
+  `m/mx/my/mt/mb/ml/mr`, `gap/gap-x/gap-y` (e.g. `m-4`, `px-4`, `gap-2-5`).
+- **Typography** — `text-xs`…`text-4xl` (font sizes), `text-left/center/right`,
+  `font-thin`…`font-black`.
+- **Sizing** — `w-full`, `w-screen`, `h-full`, `w-auto`, …
+- **Borders/effects** — `rounded*`, `border`, `border-2`, `shadow*`,
+  `opacity-*`, `z-*`, `duration-*`, `ease-*`.
+- **Layout** — `static/fixed/absolute/relative/sticky`, `overflow-*`,
+  `whitespace-*`, `wrap-break-word`.
+- **Grid helpers** — `grid-cols-1/2/3/4/6/12`, `col-span-full`.
+- **Colors** — `text-white`, `text-black`, `bg-white`, `bg-black`,
+  `bg-transparent`.
+- **Transitions** — `transition`, `transition-colors`, `transition-opacity`,
+  `transition-transform`.
+
+`apply()` throws a compile-time `@error` when a utility is not registered.
+
 ---
 
-## Development
+## Dark theme
+
+The `theme` partial (namespace `t`) delegates to `colors.theme()`. A dark
+theme inverts every palette so the darkest color lands on the lightest key
+(100 ↔ 700, 200 ↔ 600, 300 ↔ 500) and emits the palette under
+`:root[data-theme="dark"]`.
+
+```scss
+@use "katanakit-css/src/scss/partials/theme" as t;
+@use "katanakit-css/src/scss/partials/colors" as c;
+
+// Base (light) variables in :root
+@include c.generate-css-vars();
+
+// Dark overrides under :root[data-theme="dark"]
+@include t.theme("dark");
+
+// Or a custom theme with extra overrides
+@include t.theme("dark", $overrides: ("info": (100: #dbeafe, 500: #2563eb)));
+```
+
+```html
+<html data-theme="dark"> … </html>
+```
+
+The dark theme block only carries the six inverted palettes (special colors
+keep their `:root` definitions from `generate-css-vars()`).
+
+---
+
+## Example components
+
+Component styles are **not** part of the public sheet. Ready-to-adapt
+examples built on `apply()` live in `src/scss/components/_index.scss` and are
+used by the demo entry `src/scss/demo.scss`:
+
+```scss
+// demo.scss
+@use "main";
+@use "components/index";
+```
+
+```scss
+// components/_index.scss
+.card {
+  @include a.apply(flex, flex-col, p-4, rounded-lg, shadow-md, bg-white);
+  &:hover { @include a.apply(shadow-lg); }
+}
+```
+
+---
+
+## Run the demo locally
 
 ```bash
-bun run dev:css    # Watch + compile SCSS → dist/css/main.css
-bun run lint       # Run stylelint with --fix
+yarn install
+yarn dev          # Vite dev server on http://localhost:4321 (HMR over src/scss)
 ```
+
+The demo page is `index.html`; `demo/main.js` imports `src/scss/demo.scss`
+(full framework + example components). `demo-dist/` is the production build of
+the same page, purged by PurgeCSS.
+
+---
+
+## Scripts
+
+| Script              | Command / effect                                                              |
+| ------------------- | ----------------------------------------------------------------------------- |
+| `yarn dev`          | `vite` — dev server on port 4321 with HMR                                     |
+| `yarn build`        | `build:css && build:demo`                                                     |
+| `yarn build:css`    | Sass CLI → `dist/css/katanakit.css` (compressed, no source map)               |
+| `yarn build:demo`   | `vite build` → `demo-dist/` with PurgeCSS (`variables: false` keeps tokens)   |
+| `yarn preview`      | `vite preview` — preview the `demo-dist` build                                |
+| `yarn test`         | `node --test "test/**/*.test.mjs"` — 26 tests over fixtures in `test/fixtures/` |
+
+PostCSS runs **autoprefixer** during the Vite builds.
+
+---
+
+## Project structure
+
+```
+katanakit-css/
+├── src/scss/
+│   ├── main.scss                 # public entry: reset + tokens + color + all utilities
+│   ├── demo.scss                 # demo entry: @use "main" + @use "components/index"
+│   ├── components/_index.scss    # example components built with @apply
+│   └── partials/
+│       ├── _functions.scss       # as f — unit/color/fluid functions
+│       ├── _variables.scss       # as v — token maps + accessors + generate-css-tokens
+│       ├── _reset.scss           # modern CSS reset (custom-property driven)
+│       ├── _breakpoints.scss     # as bp — media queries + features
+│       ├── _colors.scss          # as c — palettes, accessors, utilities, theme
+│       ├── _theme.scss           # as t — theme hook (delegates to colors)
+│       ├── _grid.scss            # as g — grid mixins
+│       ├── _flex.scss            # as fl — flexbox mixins
+│       ├── _apply.scss           # as a — @apply registry + mixin
+│       ├── _utils.scss           # as u — facade, forwards utils/
+│       └── utils/
+│           ├── _index.scss       # generate-all-utilities
+│           ├── _core.scss        # generic mixins (utils-classes, vars-*, centering)
+│           ├── _maps.scss        # utility token maps (!default)
+│           ├── _spacing.scss     # .p-* generator (active) + .gap
+│           ├── _sizing.scss      # w/h/min/max generator (opt-in)
+│           ├── _flex.scss        # flex/item/justify/gap generator (opt-in)
+│           ├── _effects.scss     # shadow/rounded/z/duration/ease/opacity (opt-in)
+│           └── _layout.scss      # display/position/overflow/text generator (opt-in)
+├── dist/css/katanakit.css        # npm artifact (compressed full sheet)
+├── demo-dist/                    # production build of the demo (PurgeCSS)
+├── index.html + demo/main.js     # local demo served by Vite
+├── test/                         # node:test suite + fixtures (26 tests)
+├── docs/                         # Getting-Started, API-Reference, Architecture, Roadmap
+├── colors-palette.md             # author's brand palette (reference only)
+├── package.json · vite.config.js · postcss.config.cjs
+```
+
+---
+
+## Documentation
+
+- [Getting Started](docs/Getting-Started.md) — install, first styles, override tokens.
+- [API Reference](docs/API-Reference.md) — every function, mixin and map, verified against the code.
+- [Architecture](docs/Architecture.md) — layers, module graph and build flow.
+- [Roadmap](docs/Roadmap.md) — what is done and what is planned.
+
+Also see [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md) and
+[CHANGELOG.md](CHANGELOG.md).
+
+---
+
+## Brand color reference
+
+`colors-palette.md` documents the **personal brand palette** of the author
+(Sol Naciente, Sombra Acero, Oro Sensei, Pergamino, Tatami, Niebla Bambú,
+Tinta Sumi-e). It is provided for reference **only** and is not wired into the
+framework colors described above.
+
+---
 
 ## License
 
-MIT — Copy, paste, build.
+[MIT](LICENSE) © 2026 Sergio Jurado
