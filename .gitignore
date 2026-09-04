@@ -65,3 +65,8 @@ coverage/
 .DS_Store
 Thumbs.db
 
+# Versiones compiladas por build:versions (artefacto de build)
+public/versions/*.css
+
+# Keep folder placeholders
+!.gitkeep
