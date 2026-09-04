@@ -1,7 +1,11 @@
 // ============================================================
 //  _variables.scss
-//  Design tokens, color palettes y generadores de CSS vars.
-//  Fuente de verdad única de la paleta y los tokens del framework.
+//  Design tokens, color palettes and CSS custom-property
+//  generators. This module is the single source of truth for the
+//  framework palette and tokens.
+//
+//  All maps are flagged with !default: define your own value
+//  before @use-ing this module to override them.
 // ============================================================
 @use "sass:map";
 @use "sass:list";
@@ -10,14 +14,19 @@
 
 // ============================================
 //  TOKEN MAPS
+//  Sass maps that store the framework design tokens. Keys become
+//  the class/custom-property suffixes (e.g. "sm" → --shadow-sm).
 // ============================================
 
+// Named font stacks: key = token name, value = CSS font-family list.
 $font-families: (
   "sans-serif": (ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif),
   "serif": ("Times New Roman", Trebuchet, Geneva, serif),
   "mono": (monospace)
 ) !default;
 
+// Box-shadow presets (Tailwind-style). Single values are plain
+// shadows; lists combine multiple shadows separated by commas.
 $shadow-sizes: (
   "default": (0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)),
   "sm": 0 1px 2px 0 rgb(0 0 0 / 0.05),
@@ -28,25 +37,28 @@ $shadow-sizes: (
   "inner": inset 0 2px 4px 0 rgb(0 0 0 / 0.05)
 ) !default;
 
+// Max-width presets for container-like components.
 $container-sizes: (
   "sm": 24rem, "md": 28rem, "lg": 32rem, "xl": 36rem,
   "2xl": 42rem, "3xl": 48rem, "4xl": 56rem, "5xl": 64rem, "6xl": 72rem
 ) !default;
 
+// Screen breakpoints (min-width values). Mirrored in _mixins.scss.
 $breakpoint-sizes: (
   "xs": 0, "sm": 640px, "md": 768px, "lg": 1024px,
   "xl": 1280px, "2xl": 1536px, "3xl": 1920px
 ) !default;
 
+// Classic spacing scale used for the --spacing-* custom properties.
 $spacing-scale: (
   "0": 0, "1": 0.25rem, "2": 0.5rem, "3": 0.75rem, "4": 1rem,
   "5": 1.25rem, "6": 1.5rem, "8": 2rem, "10": 2.5rem, "12": 3rem,
   "16": 4rem, "20": 5rem, "24": 6rem, "32": 8rem
 ) !default;
 
-// Escala completa de espaciado: fuente de verdad única para las
-// clases .p-*/.m-*/.gap-* (utilities) y para el registro @apply
-// (mixins). Incluye fracciones en notación kebab: p-05, p-1-5…
+// Full spacing scale — single source of truth for the .p-*/.m-*/.gap-*
+// utility classes (_utilities.scss) and for the @apply registry
+// (_mixins.scss). Fractions use kebab notation: p-05, p-1-5…
 $spacing-map: (
   "0": 0, "05": 0.125rem, "base": 1px, "1": 0.25rem, "1-5": 0.375rem,
   "2": 0.5rem, "2-5": 0.625rem, "3": 0.75rem, "3-5": 0.875rem, "4": 1rem,
@@ -57,22 +69,26 @@ $spacing-map: (
   "72": 18rem, "80": 20rem, "96": 24rem
 ) !default;
 
+// Border-radius presets; "full" produces a pill/circle shape.
 $radius: (
   "default": 0.25rem, "sm": 0.125rem, "md": 0.375rem, "lg": 0.5rem,
   "xl": 0.75rem, "2xl": 1rem, "3xl": 1.5rem, "full": 9999px
 ) !default;
 
+// Z-index scale, from plain numbers to named layers (dropdown…tooltip).
 $z-layers: (
   "auto": auto, "0": 0, "10": 10, "20": 20, "30": 30,
   "40": 40, "50": 50, "dropdown": 1000, "sticky": 1020,
   "fixed": 1030, "modal": 1040, "popover": 1050, "tooltip": 1060
 ) !default;
 
+// Transition durations keyed by milliseconds.
 $transition-durations: (
   "75": 75ms, "100": 100ms, "150": 150ms, "200": 200ms,
   "300": 300ms, "500": 500ms, "700": 700ms, "1000": 1000ms
 ) !default;
 
+// Transition timing functions. Keys are used as .ease-* suffixes.
 $transition-easings: (
   "linear": linear, "in": cubic-bezier(0.4, 0, 1, 1),
   "out": cubic-bezier(0, 0, 0.2, 1), "in-out": cubic-bezier(0.4, 0, 0.2, 1)
@@ -80,8 +96,12 @@ $transition-easings: (
 
 // ============================================
 //  TOKEN ACCESS FUNCTIONS
+//  Typed getters for the token maps. Each one errors out with the
+//  list of valid keys when given an unknown key, catching typos
+//  at compile time.
 // ============================================
 
+// Returns the font stack for a key of $font-families.
 @function font-family($name) {
   @if not map.has-key($font-families, $name) {
     @error "font-family(): '#{$name}' no existe. Use: #{map.keys($font-families)}.";
@@ -89,6 +109,7 @@ $transition-easings: (
   @return map.get($font-families, $name);
 }
 
+// Returns the box-shadow preset for $size ("default", "sm", "md"…).
 @function shadow($size: "default") {
   @if not map.has-key($shadow-sizes, $size) {
     @error "shadow(): '#{$size}' no existe. Use: #{map.keys($shadow-sizes)}.";
@@ -96,6 +117,7 @@ $transition-easings: (
   @return map.get($shadow-sizes, $size);
 }
 
+// Returns the container max-width for $size ("sm"…"6xl").
 @function container($size) {
   @if not map.has-key($container-sizes, $size) {
     @error "container(): '#{$size}' no existe. Use: #{map.keys($container-sizes)}.";
@@ -103,6 +125,7 @@ $transition-easings: (
   @return map.get($container-sizes, $size);
 }
 
+// Returns the pixel width for a breakpoint name ("xs"…"3xl").
 @function breakpoint($name) {
   @if not map.has-key($breakpoint-sizes, $name) {
     @error "breakpoint(): '#{$name}' no existe. Use: #{map.keys($breakpoint-sizes)}.";
@@ -110,6 +133,8 @@ $transition-easings: (
   @return map.get($breakpoint-sizes, $name);
 }
 
+// Returns a value from $spacing-scale. Accepts a string key ("4")
+// or a number (4), which is converted to its key form.
 @function spacing($size) {
   @if meta.type-of($size) == "number" { $size: "#{$size}"; }
   @if not map.has-key($spacing-scale, $size) {
@@ -118,6 +143,7 @@ $transition-easings: (
   @return map.get($spacing-scale, $size);
 }
 
+// Returns the border-radius preset for $size.
 @function radius($size: "default") {
   @if not map.has-key($radius, $size) {
     @error "radius(): '#{$size}' no existe. Use: #{map.keys($radius)}.";
@@ -125,6 +151,7 @@ $transition-easings: (
   @return map.get($radius, $size);
 }
 
+// Returns the z-index for a layer key; numbers are stringified ("10").
 @function z($layer) {
   @if meta.type-of($layer) == "number" { $layer: "#{$layer}"; }
   @if not map.has-key($z-layers, $layer) {
@@ -133,6 +160,7 @@ $transition-easings: (
   @return map.get($z-layers, $layer);
 }
 
+// Returns the transition duration for $ms (75, 100, 150…).
 @function duration($ms) {
   @if meta.type-of($ms) == "number" { $ms: "#{$ms}"; }
   @if not map.has-key($transition-durations, $ms) {
@@ -141,6 +169,7 @@ $transition-easings: (
   @return map.get($transition-durations, $ms);
 }
 
+// Returns the easing curve for $name (default "in-out").
 @function ease($name: "in-out") {
   @if not map.has-key($transition-easings, $name) {
     @error "ease(): '#{$name}' no existe. Use: #{map.keys($transition-easings)}.";
@@ -150,8 +179,13 @@ $transition-easings: (
 
 // ============================================
 //  GENERATE CSS CUSTOM PROPERTIES (tokens)
+//  Emits the design tokens as --prefix-key custom properties
+//  inside :root, e.g. --font-sans-serif, --shadow-md, --spacing-4.
 // ============================================
 
+// Emits one group of custom properties per token map.
+// Every group is enabled by default; pass false to skip a group
+// (e.g. generate-css-tokens($shadows: false)).
 @mixin generate-css-tokens(
   $fonts: true, $shadows: true, $containers: true, $spacing: true,
   $radius-tokens: true, $z: true, $durations: true, $easings: true
@@ -170,8 +204,13 @@ $transition-easings: (
 
 // ============================================================
 //  COLOR PALETTES
+//  Each palette maps a shade (100–700, light → dark) to an hsla
+//  color. Palette names become the prefix of the generated
+//  classes and custom properties (--purple-500, .bg-purple-500…).
 // ============================================================
 
+// Main palettes. Override the whole map or individual entries
+// before importing to re-theme the framework.
 $colors: (
   "neutral": (
     100: hsla(0, 0%, 93%, 1), 200: hsla(0, 0%, 86%, 1), 300: hsla(0, 0%, 71%, 1),
@@ -205,17 +244,23 @@ $colors: (
   )
 ) !default;
 
+// Single-value colors without shades: black, white, transparent, current.
 $special-colors: (
   "black": hsl(0, 0%, 3%), "white": hsl(0, 0%, 98%),
   "transparent": transparent, "current": currentColor
 ) !default;
 
+// Shade order used by the theme() mixin to invert palettes in dark mode.
 $shades: (100, 200, 300, 400, 500, 600, 700) !default;
 
 // ============================================================
 //  COLOR ACCESS FUNCTIONS
+//  Typed color getters with compile-time validation.
 // ============================================================
 
+// Returns a color from $colors/$special-colors.
+// Special colors ("white", "black"…) ignore $shade. Pass $alpha != 1
+// to change the alpha channel of regular colors.
 @function get-color($name, $shade: 300, $alpha: 1) {
   @if map.has-key($special-colors, $name) {
     $color: map.get($special-colors, $name);
@@ -230,13 +275,19 @@ $shades: (100, 200, 300, 400, 500, 600, 700) !default;
   @return $color;
 }
 
+// Shorthand: main color of a palette (shade 500) with optional alpha.
 @function get($name, $alpha: 1) { @return get-color($name, 500, $alpha); }
+// Shorthand for a semi-transparent color (alpha defaults to 0.5).
 @function alpha($name, $shade: 500, $alpha: 0.5) { @return get-color($name, $shade, $alpha); }
 
 // ============================================================
 //  GENERATE CSS CUSTOM PROPERTIES (colors)
+//  Emits --palette-shade custom properties (plus the special
+//  colors) inside the selector you choose.
 // ============================================================
 
+// Private helper: keeps only the palettes whose names are listed in
+// $keys (a single string is wrapped into a one-item list first).
 @function _filter-palettes($map, $keys) {
   @if meta.type-of($keys) == "string" { $keys: ($keys,); }
   $result: ();
@@ -246,6 +297,11 @@ $shades: (100, 200, 300, 400, 500, 600, 700) !default;
   @return $result;
 }
 
+// Emits color custom properties.
+// $root: selector to wrap the properties in (default ":root").
+// $palettes: null → all palettes; a map → use it directly;
+//            a list of names → only those palettes from $colors.
+// $include-special: also emit --white, --black, --transparent, --current.
 @mixin generate-css-vars($root: ":root", $palettes: null, $include-special: true) {
   $source: $colors;
   @if $palettes != null {
@@ -264,8 +320,13 @@ $shades: (100, 200, 300, 400, 500, 600, 700) !default;
 
 // ============================================================
 //  COLOR UTILITY CLASS GENERATORS
+//  Emit utility classes from the palettes, e.g.
+//  .text-purple-500, .bg-info-300, .border-danger-700 and the
+//  special variants .text-white, .bg-transparent…
 // ============================================================
 
+// Private generator shared by text/bg/border utilities:
+// one class per palette shade for $property, prefixed with $class-prefix.
 @mixin _utility-classes($property, $class-prefix, $palettes: null, $include-special: true) {
   $palettes: if(sass($palettes == null): $colors; else: _filter-palettes($colors, $palettes));
   @each $name, $palette in $palettes {
@@ -280,10 +341,14 @@ $shades: (100, 200, 300, 400, 500, 600, 700) !default;
   }
 }
 
+// Public generators. Each accepts $palettes (null = all, list = subset)
+// and $special (whether to emit the special colors too).
 @mixin text-utilities($palettes: null, $special: true)   { @include _utility-classes(color, "text", $palettes, $special); }
 @mixin bg-utilities($palettes: null, $special: true)     { @include _utility-classes(background-color, "bg", $palettes, $special); }
 @mixin border-utilities($palettes: null, $special: true) { @include _utility-classes(border-color, "border", $palettes, $special); }
 
+// Emits :hover color variants: .hover-text-purple-500:hover and
+// .hover-bg-purple-500:hover (plus the special colors).
 @mixin hover-utilities($palettes: null, $special: true) {
   $palettes: if(sass($palettes == null): $colors; else: _filter-palettes($colors, $palettes));
   @each $name, $palette in $palettes {
@@ -300,6 +365,7 @@ $shades: (100, 200, 300, 400, 500, 600, 700) !default;
   }
 }
 
+// Emits every color utility group at once.
 @mixin all-utilities($palettes: null, $special: true) {
   @include text-utilities($palettes, $special);
   @include bg-utilities($palettes, $special);
@@ -309,8 +375,14 @@ $shades: (100, 200, 300, 400, 500, 600, 700) !default;
 
 // ============================================================
 //  THEME
+//  Emits a themed set of color custom properties scoped to a
+//  selector, e.g. :root[data-theme='dark'].
 // ============================================================
 
+// Creates a color theme. For $mode == "dark" each palette is
+// inverted (shade 100 ↔ 700, 200 ↔ 600, …) so light shades become
+// dark and vice versa. $overrides is merged on top of the result.
+// Output selector: :root[data-theme='<mode>'].
 @mixin theme($mode, $overrides: ()) {
   $base: $colors;
   @if $mode == "dark" {

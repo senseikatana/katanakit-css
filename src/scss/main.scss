@@ -1,3 +1,6 @@
+// Load every framework module under a namespaced alias (v, f, m, u).
+// Note: loading "mixins" also runs its module-level register-utility()
+// calls that populate the @apply registry.
 @use "reset";
 @use "variables" as v;
 @use "functions" as f;
@@ -5,24 +8,29 @@
 @use "utilities" as u;
 
 // ============================================================
-//  KATANAKIT CSS — ENTRY PÚBLICO
-//  Genera la hoja completa del framework: reset, tokens como
-//  custom properties en :root, variables de color y todas las
-//  clases utilitarias.
+//  KATANAKIT CSS — PUBLIC ENTRY POINT
+//  Emits the complete framework stylesheet: reset, design tokens
+//  as custom properties on :root, color variables and every
+//  utility class.
 //
-//  Para componer una hoja a medida importa los módulos
-//  individualmente:
+//  To compose a smaller custom stylesheet, import the modules
+//  individually instead:
 //    @use "katanakit-css/src/scss/variables" as v;
 //    @use "katanakit-css/src/scss/mixins" as m;
 //    @use "katanakit-css/src/scss/functions" as f;
 // ============================================================
 
-// Custom properties de tokens y de colores en :root
+// Emit design-token custom properties on :root
+// (--font-*, --shadow-*, --spacing-*, --radius-*, --z-*, --duration-*, --ease-*).
 @include v.generate-css-tokens();
+
+// Emit color custom properties on :root
+// (--purple-500, --info-300… plus --white/--black/--transparent/--current).
 @include v.generate-css-vars();
 
-// Utilidades de color: .text-*, .bg-*, .border-* y variantes hover
+// Emit color utility classes: .text-*, .bg-*, .border-* and their :hover variants.
 @include v.all-utilities();
 
-// Generadores ópt-in de utilidades: sizing, flex, efectos y layout
+// Emit the opt-in utility generators: sizing, flex, effects and layout classes.
+// Call the individual mixins instead to pick and choose.
 @include u.generate-all-utilities();

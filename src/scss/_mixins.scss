@@ -1,7 +1,9 @@
 // ============================================================
 //  _mixins.scss
-//  Mixins de layout, breakpoints, grid, flexbox, @apply y
-//  generadores genéricos de clases utilitarias.
+//  Layout, breakpoint, grid and flexbox mixins, generic utility
+//  class generators and the @apply registry.
+//  Loading this module also registers the built-in @apply
+//  utilities (top-level register-utility() calls at the bottom).
 // ============================================================
 @use "sass:meta";
 @use "sass:math";
@@ -13,13 +15,18 @@
 
 // ============================================================
 //  BREAKPOINTS
+//  Media-query helpers. The breakpoint map mirrors the one in
+//  _variables.scss and can be overridden with !default before import.
 // ============================================================
 
+// Min-width values for the breakpoint mixins.
 $breakpoints: (
   "xs": 0, "sm": 640px, "md": 768px, "lg": 1024px,
   "xl": 1280px, "2xl": 1536px, "3xl": 1920px
 ) !default;
 
+// Private: resolves a breakpoint argument. Numbers pass through
+// (unitless ones gain px); strings must be keys of $breakpoints.
 @function _breakpoint-value($key) {
   @if meta.type-of($key) == "number" {
     @return if(sass(math.is-unitless($key)): $key * 1px; else: $key);
@@ -30,6 +37,11 @@ $breakpoints: (
   @return map.get($breakpoints, $key);
 }
 
+// Private: builds the media-query string for a direction.
+// up      → min-width
+// down    → max-width (0.02px below the breakpoint to avoid overlap)
+// only    → min + max (exclusive upper bound)
+// between → min + max (inclusive upper bound)
 @function _media-query($direction, $from, $to: null) {
   @if $direction == "up" { @return "(min-width: #{$from})"; }
   @if $direction == "down" { $max: calc(#{$from} - 0.02px); @return "(max-width: #{$max})"; }
@@ -45,14 +57,21 @@ $breakpoints: (
   @error "Dirección '#{$direction}' no válida. Use: up, down, only, between.";
 }
 
+// Wraps @content in a media query. Direction defaults to "up".
+// Examples:
+//   @include m.breakpoint("md") { … }               // ≥ 768px
+//   @include m.breakpoint("md", "down") { … }       // ≤ 767.98px
+//   @include m.breakpoint("md", "only", "lg") { … } // 768–1023.98px
 @mixin breakpoint($from, $direction: up, $to: null) {
   $from-val: _breakpoint-value($from);
   $to-val: if(sass($to != null): _breakpoint-value($to); else: null);
   @media #{_media-query($direction, $from-val, $to-val)} { @content; }
 }
 
+// Argument-forwarding alias: @include bp("md", "only", "lg") { … }.
 @mixin bp($args...) { @include breakpoint($args...) { @content; } }
 
+// Shorthand mixins for min-width queries, one per breakpoint.
 @mixin xs     { @include breakpoint("xs", up)   { @content; } }
 @mixin sm     { @include breakpoint("sm", up)   { @content; } }
 @mixin md     { @include breakpoint("md", up)   { @content; } }
@@ -61,6 +80,7 @@ $breakpoints: (
 @mixin xxl    { @include breakpoint("2xl", up)  { @content; } }
 @mixin xxxl   { @include breakpoint("3xl", up)  { @content; } }
 
+// Shorthand mixins for max-width queries (mobile-first "below" queries).
 @mixin xs-down  { @include breakpoint("xs", down)  { @content; } }
 @mixin sm-down  { @include breakpoint("sm", down)  { @content; } }
 @mixin md-down  { @include breakpoint("md", down)  { @content; } }
@@ -68,9 +88,12 @@ $breakpoints: (
 @mixin xl-down  { @include breakpoint("xl", down)  { @content; } }
 @mixin x2l-down { @include breakpoint("2xl", down) { @content; } }
 @mixin x3l-down { @include breakpoint("3xl", down) { @content; } }
+// Aliases with friendlier names for the 2xl/3xl down queries.
 @mixin xxl-down { @include x2l-down { @content; } }
 @mixin xxxl-down { @include x3l-down { @content; } }
 
+// Media-feature queries: orientation, motion and pointer preferences
+// plus OS color scheme.
 @mixin portrait       { @media (orientation: portrait)              { @content; } }
 @mixin landscape      { @media (orientation: landscape)             { @content; } }
 @mixin reduced-motion { @media (prefers-reduced-motion: reduce)     { @content; } }
@@ -81,16 +104,24 @@ $breakpoints: (
 
 // ============================================================
 //  GRID
+//  CSS Grid helpers: containers, responsive/auto grids, spans,
+//  placements, areas, subgrid, masonry and stacking.
 // ============================================================
 
+// Defaults used by the grid mixins (gap = 10px → 1rem, 12 columns).
+// Override with !default semantics before import.
 $grid-gap-default: f.rem(10px) !default;
 $grid-columns-default: 12 !default;
 
+// Private: unitless numbers are treated as rem (4 → 4rem); anything
+// with a unit passes through untouched.
 @function _to-rem($value) {
   @if meta.type-of($value) == "number" and math.is-unitless($value) { @return $value * 1rem; }
   @return $value;
 }
 
+// Private: validates and rounds a grid-stack() column/row index
+// (must be a unitless number ≥ 1).
 @function _stack-index($value, $name) {
   @if meta.type-of($value) != "number" { @error "grid-stack(): #{$name} debe ser un número, recibió #{meta.inspect($value)}."; }
   @if not math.is-unitless($value) { @error "grid-stack(): #{$name} debe ser sin unidad, recibió #{$value}."; }
@@ -98,17 +129,24 @@ $grid-columns-default: 12 !default;
   @return math.round($value);
 }
 
+// Private: strips a leading dot from a parent selector string.
 @function _stack-parent($parent) {
   @if meta.type-of($parent) == "string" and string.index($parent, ".") == 1 { @return string.slice($parent, 2); }
   @return $parent;
 }
 
+// Private: shared start of every grid mixin — display: grid plus an
+// optional gap (unitless → rem). Passes @content through.
 @mixin _grid-base($gap: null) {
   display: grid;
   @if $gap != null { gap: _to-rem($gap); }
   @content;
 }
 
+// Responsive auto-grid: as many columns as fit, each at least
+// $min-size wide (unitless → rem) and at most $max-size.
+// $mode: "fill" (auto-fill, keeps empty tracks) or "fit" (auto-fit,
+// collapses empty tracks).
 @mixin grid-responsive($min-size, $mode: fill, $max-size: 1fr, $gap: null) {
   $keyword: null;
   @if $mode == fill { $keyword: "auto-fill"; }
@@ -120,9 +158,13 @@ $grid-columns-default: 12 !default;
   }
 }
 
+// Convenience wrappers for the two grid-responsive modes.
 @mixin grid-autofill($min-size, $max-size: 1fr, $gap: null) { @include grid-responsive($min-size, fill, $max-size, $gap) { @content; } }
 @mixin grid-autofit($min-size, $max-size: 1fr, $gap: null)  { @include grid-responsive($min-size, fit, $max-size, $gap) { @content; } }
 
+// Fixed-column grid container. Defaults: 12 equal columns, centered
+// items. When $place-items/$place-content are null it falls back to
+// the individual $align-items/$justify-content values.
 @mixin grid-container(
   $cols: $grid-columns-default, $rows: null, $gap: $grid-gap-default,
   $place-items: center, $place-content: center, $align-items: null, $justify-content: null
@@ -137,14 +179,20 @@ $grid-columns-default: 12 !default;
   }
 }
 
+// Grid that centers its items both ways.
 @mixin grid-center($gap: null) { @include _grid-base($gap) { place-items: center; place-content: center; @content; } }
+// Sets gap and also exposes it as a custom property ($var-name) so it
+// can be overridden or read from plain CSS.
 @mixin grid-gap($value: $grid-gap-default, $var-name: --grid-gap) { #{$var-name}: #{_to-rem($value)}; gap: var(#{$var-name}); }
 
+// Makes an item span $cols columns and optionally $rows rows.
 @mixin grid-span($cols: 1, $rows: null) {
   grid-column: span $cols;
   @if $rows != null { grid-row: span $rows; }
 }
 
+// Explicit grid placement using line numbers (1-based; -1 = last line).
+// Rows are only emitted when row positions are provided.
 @mixin grid-placement($col-start: 1, $col-end: -1, $row-start: null, $row-end: null) {
   grid-column: #{$col-start} / #{$col-end};
   @if $row-start != null and $row-end != null { grid-row: #{$row-start} / #{$row-end}; }
@@ -152,16 +200,24 @@ $grid-columns-default: 12 !default;
   @content;
 }
 
+// Named grid areas: pass the ASCII-area string directly.
 @mixin grid-areas($areas, $gap: null) { @include _grid-base($gap) { grid-template-areas: $areas; @content; } }
+// Assigns an item to a named area.
 @mixin grid-area($name) { grid-area: $name; @content; }
+// Centers a single grid item inside its cell.
 @mixin grid-item-center { place-self: center center; }
 
+// Spans the full width of the grid by default (columns 1 to -1),
+// optionally with a row range.
 @mixin grid-item-full($col: "1 / -1", $row: null) {
   grid-column: #{$col};
   @if $row != null { grid-row: $row; }
   @content;
 }
 
+// Responsive column count driven by a map, e.g.
+// ("default": 1, "md": 2, "lg": 4) → 1 column, 2 from md, 4 from lg.
+// Without a "default" key the first entry is used as the base.
 @mixin grid-breakpoint-columns($columns-map, $gap: $grid-gap-default, $align-items: stretch) {
   @include _grid-base($gap) {
     align-items: $align-items;
@@ -175,12 +231,16 @@ $grid-columns-default: 12 !default;
   }
 }
 
+// Makes an item a subgrid of its parent on the given axis
+// ("column", "row" or "both", the default).
 @mixin subgrid($axis: both) {
   display: grid;
   @if $axis == column or $axis == both { grid-template-columns: subgrid; }
   @if $axis == row or $axis == both { grid-template-rows: subgrid; }
 }
 
+// Experimental CSS masonry layout (grid-template-rows: masonry).
+// $axis: "block" (rows flow like masonry) or "inline" (columns).
 @mixin grid-masonry($axis: block, $gap: null) {
   @include _grid-base($gap) {
     grid-template-rows: masonry;
@@ -189,10 +249,17 @@ $grid-columns-default: 12 !default;
   }
 }
 
+// Auto-fill grid where every column is exactly $col-width wide.
 @mixin grid-fixed-columns($col-width, $gap: null) {
   @include _grid-base($gap) { grid-template-columns: repeat(auto-fill, _to-rem($col-width)); @content; }
 }
 
+// Stacks children on top of each other in the same grid cell
+// ($col/$row — both must be unitless numbers ≥ 1).
+// With $parent (class name, optional leading dot) it emits the parent
+// rule plus one placement rule per $children selector; without
+// $parent it styles the current element (&) and its children.
+// $dp is the display value for the stack container (default "grid").
 @mixin grid-stack($dp: grid, $parent: null, $children: ("*"), $col: 1, $row: 1) {
   @if $parent != null and meta.type-of($parent) != "string" and meta.type-of($parent) != "number" {
     @error "grid-stack(): $parent debe ser un string o null, recibió #{meta.inspect($parent)}.";
@@ -211,6 +278,7 @@ $grid-columns-default: 12 !default;
   }
 }
 
+// Places the current item into a specific stack cell (1-based).
 @mixin grid-stack-item($col: 1, $row: 1) {
   $col: _stack-index($col, "$col"); $row: _stack-index($row, "$row");
   @include grid-placement($col, $col + 1, $row, $row + 1);
@@ -218,14 +286,19 @@ $grid-columns-default: 12 !default;
 
 // ============================================================
 //  FLEXBOX
+//  Flex container and flex item helpers.
 // ============================================================
 
+// Private: shared start of every flex mixin — display: flex plus an
+// optional gap (unitless → rem).
 @mixin _flex-base($gap: null) {
   display: flex;
   @if $gap != null { gap: _to-rem($gap); }
   @content;
 }
 
+// Full-featured flex container. $place-items/$place-content win over
+// the individual $align-items/$justify-content/$align-content when set.
 @mixin flex-container(
   $direction: row, $wrap: nowrap, $gap: null, $align-items: stretch,
   $justify-content: flex-start, $align-content: normal, $place-items: null, $place-content: null
@@ -238,38 +311,55 @@ $grid-columns-default: 12 !default;
   }
 }
 
+// Flex that centers its items both ways.
 @mixin flex-center($gap: null) { @include _flex-base($gap) { place-items: center; place-content: center; @content; } }
+// Sets gap and exposes it as the custom property $var-name.
 @mixin flex-gap($value: 1rem, $var-name: --flex-gap) { #{$var-name}: #{_to-rem($value)}; gap: var(#{$var-name}); }
+// Individual flex-item properties.
 @mixin flex-grow($grow: 1)     { flex-grow: $grow; }
 @mixin flex-shrink($shrink: 1) { flex-shrink: $shrink; }
 @mixin flex-basis($basis: auto) { flex-basis: $basis; }
+// Shorthand for the flex property (grow, shrink, basis).
 @mixin flex-item($grow: 1, $shrink: 1, $basis: auto) { flex: $grow $shrink $basis; }
+// Centers the item on the cross axis.
 @mixin flex-item-center { align-self: center; }
+// Item that fills its row (grow 1, basis 100%).
 @mixin flex-item-full { @include flex-item(1, 1, 100%); @content; }
 
 // ============================================================
-//  GENERIC UTILS HELPERS
+//  GENERIC UTIL HELPERS
+//  Building blocks used to emit utility classes and custom
+//  properties from Sass lists and maps.
 // ============================================================
 
+// Emits a custom property per list item: --prefix-item: item
+// (or --item: item when no prefix is given).
 @mixin vars-list($list, $prefix: null) {
   @each $value in $list {
     @if $prefix != null { --#{$prefix}-#{$value}: #{$value}; } @else { --#{$value}: #{$value}; }
   }
 }
 
+// Same as vars-list() but for maps: --prefix-key: value.
 @mixin vars-map($map, $prefix: null) {
   @each $key, $value in $map {
     @if $prefix != null { --#{$prefix}-#{$key}: #{$value}; } @else { --#{$key}: #{$value}; }
   }
 }
 
+// Centers an element with position + translate(-50%, -50%).
+// $pos can be "absolute" (default) or "fixed".
 @mixin absolute-center($pos: absolute, $y: 50%, $x: 50%) {
   position: #{$pos}; top: #{$y}; left: #{$x}; transform: translate(-50%, -50%); @content;
 }
 
+// Horizontal / vertical auto-margin centering.
 @mixin center-mx($xvalue: auto) { margin-inline: #{$xvalue}; @content; }
 @mixin center-my($yvalue: auto) { margin-block: #{$yvalue}; @content; }
 
+// Emits one utility class per entry. Lists: class = value
+// (.prefix-value { prop: value }). Maps: class = key
+// (.prefix-key { prop: value }). No prefix → bare class names.
 @mixin utils-classes($input, $property, $prefix: null) {
   @if meta.type-of($input) == "list" {
     @each $value in $input {
@@ -284,6 +374,8 @@ $grid-columns-default: 12 !default;
   } @else { @error "utils-classes(): se esperaba lista o mapa, recibió #{meta.type-of($input)}."; }
 }
 
+// Hover variant of utils-classes(): emits .prefix-key:hover rules
+// (or .hover-key:hover when no prefix is given).
 @mixin utils-classes-hover($input, $property, $prefix: null) {
   @if meta.type-of($input) == "list" {
     @each $value in $input {
@@ -300,14 +392,22 @@ $grid-columns-default: 12 !default;
 
 // ============================================================
 //  @APPLY REGISTRY
+//  A lightweight @apply implementation: utilities are registered
+//  at load time and applied inside components via apply().
 // ============================================================
 
+// Global map holding every registered utility: name → (prop: value).
 $_utility-registry: ();
 
+// Registers a utility name with its declaration map so apply() can
+// use it later. Call once per utility (typically at module top level).
 @mixin register-utility($name, $styles) {
   $_utility-registry: map.merge($_utility-registry, ($name: $styles)) !global;
 }
 
+// Emits the declarations of the given registered utilities inside the
+// current rule. Errors at compile time for unknown names.
+// Example: @include m.apply(flex, items-center, gap-4);
 @mixin apply($utilities...) {
   @each $util in $utilities {
     $util-str: "#{$util}";
@@ -318,6 +418,8 @@ $_utility-registry: ();
     @each $prop, $value in $styles { #{$prop}: #{$value}; }
   }
 }
+
+// === Built-in registrations (executed when the module loads) ===
 
 // --- Display ---
 @include register-utility("block", (display: block));
