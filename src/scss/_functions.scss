@@ -1,11 +1,14 @@
+// ============================================================
+//  _functions.scss
+//  Funciones puras: conversión de unidades, manipulación de
+//  color y tipografía fluida.
+// ============================================================
 @use "sass:math";
 @use "sass:color";
 @use "sass:meta";
 @use "sass:string";
 @use "sass:list";
 
-// Base root font-size (browser default). Override it only if your project
-// sets a non-16px root, e.g. `html { font-size: 62.5% }` → 10px.
 $base-font-size: 16px !default;
 
 // ============================================================
@@ -25,8 +28,6 @@ $base-font-size: 16px !default;
   @if meta.type-of($size) != "number" {
     @error "rem(): se esperaba un número, recibió #{meta.inspect($size)}.";
   }
-  // Convierte el valor a px "sin unidad" y lo divide por la base (16px por
-  // defecto) para devolver el equivalente en rem.
   $px: if(sass(math.is-unitless($size)): $size; else: math.div($size, 1px));
   $base: math.div($base-font-size, 1px);
   @return math.div($px, $base) * 1rem;
@@ -36,7 +37,6 @@ $base-font-size: 16px !default;
   @if meta.type-of($size) != "number" {
     @error "px(): se esperaba un número, recibió #{meta.inspect($size)}.";
   }
-  // Convierte rem a px: acepta 1.6 (rem) o 1.6rem.
   $num: if(sass(math.is-unitless($size)): $size; else: math.div($size, 1rem));
   $base: math.div($base-font-size, 1px);
   @return $num * $base * 1px;
@@ -46,9 +46,7 @@ $base-font-size: 16px !default;
   @if meta.type-of($value) != "number" {
     @error "to-unit(): se esperaba un número, recibió #{meta.inspect($value)}.";
   }
-  @if not math.is-unitless($value) {
-    @return $value;
-  }
+  @if not math.is-unitless($value) { @return $value; }
   $valid: ("rem", "px", "em", "%");
   @if not list.index($valid, $unit) {
     @error "to-unit(): unidad '#{$unit}' no válida. Use: rem, px, em, %.";
@@ -61,9 +59,7 @@ $base-font-size: 16px !default;
 }
 
 @function strip-unit($value) {
-  @if meta.type-of($value) != "number" {
-    @error "strip-unit(): se esperaba un número.";
-  }
+  @if meta.type-of($value) != "number" { @error "strip-unit(): se esperaba un número."; }
   @return math.div($value, ($value * 0 + 1));
 }
 
@@ -76,7 +72,6 @@ $base-font-size: 16px !default;
   $vw-min: if(sass(math.is-unitless($min-vw)): $min-vw * 1px; else: $min-vw);
   $vw-max: if(sass(math.is-unitless($max-vw)): $max-vw * 1px; else: $max-vw);
 
-  // Pendiente en px por px de viewport: (Δfont-size) / (Δviewport).
   $slope: math.div(
     strip-unit($max-val) - strip-unit($min-val),
     strip-unit($vw-max) - strip-unit($vw-min)

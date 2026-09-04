@@ -1,0 +1,316 @@
+// ============================================================
+//  _variables.scss
+//  Design tokens, color palettes y generadores de CSS vars.
+//  Fuente de verdad única de la paleta y los tokens del framework.
+// ============================================================
+@use "sass:map";
+@use "sass:list";
+@use "sass:meta";
+@use "sass:color";
+
+// ============================================
+//  TOKEN MAPS
+// ============================================
+
+$font-families: (
+  "sans-serif": (ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif),
+  "serif": ("Times New Roman", Trebuchet, Geneva, serif),
+  "mono": (monospace)
+) !default;
+
+$shadow-sizes: (
+  "default": (0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)),
+  "sm": 0 1px 2px 0 rgb(0 0 0 / 0.05),
+  "md": (0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)),
+  "lg": (0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)),
+  "xl": (0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)),
+  "2xl": 0 25px 50px -12px rgb(0 0 0 / 0.25),
+  "inner": inset 0 2px 4px 0 rgb(0 0 0 / 0.05)
+) !default;
+
+$container-sizes: (
+  "sm": 24rem, "md": 28rem, "lg": 32rem, "xl": 36rem,
+  "2xl": 42rem, "3xl": 48rem, "4xl": 56rem, "5xl": 64rem, "6xl": 72rem
+) !default;
+
+$breakpoint-sizes: (
+  "xs": 0, "sm": 640px, "md": 768px, "lg": 1024px,
+  "xl": 1280px, "2xl": 1536px, "3xl": 1920px
+) !default;
+
+$spacing-scale: (
+  "0": 0, "1": 0.25rem, "2": 0.5rem, "3": 0.75rem, "4": 1rem,
+  "5": 1.25rem, "6": 1.5rem, "8": 2rem, "10": 2.5rem, "12": 3rem,
+  "16": 4rem, "20": 5rem, "24": 6rem, "32": 8rem
+) !default;
+
+$radius: (
+  "default": 0.25rem, "sm": 0.125rem, "md": 0.375rem, "lg": 0.5rem,
+  "xl": 0.75rem, "2xl": 1rem, "3xl": 1.5rem, "full": 9999px
+) !default;
+
+$z-layers: (
+  "auto": auto, "0": 0, "10": 10, "20": 20, "30": 30,
+  "40": 40, "50": 50, "dropdown": 1000, "sticky": 1020,
+  "fixed": 1030, "modal": 1040, "popover": 1050, "tooltip": 1060
+) !default;
+
+$transition-durations: (
+  "75": 75ms, "100": 100ms, "150": 150ms, "200": 200ms,
+  "300": 300ms, "500": 500ms, "700": 700ms, "1000": 1000ms
+) !default;
+
+$transition-easings: (
+  "linear": linear, "in": cubic-bezier(0.4, 0, 1, 1),
+  "out": cubic-bezier(0, 0, 0.2, 1), "in-out": cubic-bezier(0.4, 0, 0.2, 1)
+) !default;
+
+// ============================================
+//  TOKEN ACCESS FUNCTIONS
+// ============================================
+
+@function font-family($name) {
+  @if not map.has-key($font-families, $name) {
+    @error "font-family(): '#{$name}' no existe. Use: #{map.keys($font-families)}.";
+  }
+  @return map.get($font-families, $name);
+}
+
+@function shadow($size: "default") {
+  @if not map.has-key($shadow-sizes, $size) {
+    @error "shadow(): '#{$size}' no existe. Use: #{map.keys($shadow-sizes)}.";
+  }
+  @return map.get($shadow-sizes, $size);
+}
+
+@function container($size) {
+  @if not map.has-key($container-sizes, $size) {
+    @error "container(): '#{$size}' no existe. Use: #{map.keys($container-sizes)}.";
+  }
+  @return map.get($container-sizes, $size);
+}
+
+@function breakpoint($name) {
+  @if not map.has-key($breakpoint-sizes, $name) {
+    @error "breakpoint(): '#{$name}' no existe. Use: #{map.keys($breakpoint-sizes)}.";
+  }
+  @return map.get($breakpoint-sizes, $name);
+}
+
+@function spacing($size) {
+  @if meta.type-of($size) == "number" { $size: "#{$size}"; }
+  @if not map.has-key($spacing-scale, $size) {
+    @error "spacing(): '#{$size}' no existe. Use: #{map.keys($spacing-scale)}.";
+  }
+  @return map.get($spacing-scale, $size);
+}
+
+@function radius($size: "default") {
+  @if not map.has-key($radius, $size) {
+    @error "radius(): '#{$size}' no existe. Use: #{map.keys($radius)}.";
+  }
+  @return map.get($radius, $size);
+}
+
+@function z($layer) {
+  @if meta.type-of($layer) == "number" { $layer: "#{$layer}"; }
+  @if not map.has-key($z-layers, $layer) {
+    @error "z(): '#{$layer}' no existe. Use: #{map.keys($z-layers)}.";
+  }
+  @return map.get($z-layers, $layer);
+}
+
+@function duration($ms) {
+  @if meta.type-of($ms) == "number" { $ms: "#{$ms}"; }
+  @if not map.has-key($transition-durations, $ms) {
+    @error "duration(): '#{$ms}' no existe. Use: #{map.keys($transition-durations)}.";
+  }
+  @return map.get($transition-durations, $ms);
+}
+
+@function ease($name: "in-out") {
+  @if not map.has-key($transition-easings, $name) {
+    @error "ease(): '#{$name}' no existe. Use: #{map.keys($transition-easings)}.";
+  }
+  @return map.get($transition-easings, $name);
+}
+
+// ============================================
+//  GENERATE CSS CUSTOM PROPERTIES (tokens)
+// ============================================
+
+@mixin generate-css-tokens(
+  $fonts: true, $shadows: true, $containers: true, $spacing: true,
+  $radius-tokens: true, $z: true, $durations: true, $easings: true
+) {
+  :root {
+    @if $fonts { @each $n, $v in $font-families { --font-#{$n}: #{list.join($v, (), $separator: comma)}; } }
+    @if $shadows { @each $n, $v in $shadow-sizes { --shadow-#{$n}: #{$v}; } }
+    @if $containers { @each $n, $v in $container-sizes { --container-#{$n}: #{$v}; } }
+    @if $spacing { @each $n, $v in $spacing-scale { --spacing-#{$n}: #{$v}; } }
+    @if $radius-tokens { @each $n, $v in $radius { --radius-#{$n}: #{$v}; } }
+    @if $z { @each $n, $v in $z-layers { --z-#{$n}: #{$v}; } }
+    @if $durations { @each $n, $v in $transition-durations { --duration-#{$n}: #{$v}; } }
+    @if $easings { @each $n, $v in $transition-easings { --ease-#{$n}: #{$v}; } }
+  }
+}
+
+// ============================================================
+//  COLOR PALETTES
+// ============================================================
+
+$colors: (
+  "neutral": (
+    100: hsla(0, 0%, 93%, 1), 200: hsla(0, 0%, 86%, 1), 300: hsla(0, 0%, 71%, 1),
+    400: hsla(0, 0%, 50%, 1), 500: hsla(0, 0%, 35%, 1), 600: hsla(0, 0%, 24%, 1),
+    700: hsla(0, 0%, 12%, 1),
+  ),
+  "purple": (
+    100: hsla(269, 60%, 93%, 1), 200: hsla(269, 70%, 86%, 1), 300: hsla(269, 70%, 71%, 1),
+    400: hsla(269, 66%, 50%, 1), 500: hsla(269, 66%, 35%, 1), 600: hsla(269, 60%, 24%, 1),
+    700: hsla(269, 50%, 12%, 1),
+  ),
+  "info": (
+    100: hsla(215, 95%, 93%, 1), 200: hsla(215, 95%, 86%, 1), 300: hsla(215, 95%, 71%, 1),
+    400: hsla(215, 95%, 50%, 1), 500: hsla(215, 95%, 35%, 1), 600: hsla(215, 95%, 24%, 1),
+    700: hsla(215, 95%, 12%, 1),
+  ),
+  "warning": (
+    100: hsla(49, 100%, 93%, 1), 200: hsla(49, 100%, 86%, 1), 300: hsla(49, 100%, 71%, 1),
+    400: hsla(49, 100%, 50%, 1), 500: hsla(49, 100%, 35%, 1), 600: hsla(49, 90%, 24%, 1),
+    700: hsla(49, 70%, 12%, 1),
+  ),
+  "danger": (
+    100: hsla(3, 95%, 93%, 1), 200: hsla(3, 95%, 86%, 1), 300: hsla(3, 95%, 71%, 1),
+    400: hsla(3, 95%, 50%, 1), 500: hsla(3, 95%, 35%, 1), 600: hsla(3, 95%, 24%, 1),
+    700: hsla(3, 95%, 12%, 1),
+  ),
+  "success": (
+    100: hsla(147, 95%, 93%, 1), 200: hsla(147, 95%, 86%, 1), 300: hsla(147, 95%, 71%, 1),
+    400: hsla(147, 95%, 50%, 1), 500: hsla(147, 95%, 35%, 1), 600: hsla(147, 95%, 24%, 1),
+    700: hsla(147, 95%, 12%, 1),
+  )
+) !default;
+
+$special-colors: (
+  "black": hsl(0, 0%, 3%), "white": hsl(0, 0%, 98%),
+  "transparent": transparent, "current": currentColor
+) !default;
+
+$shades: (100, 200, 300, 400, 500, 600, 700) !default;
+
+// ============================================================
+//  COLOR ACCESS FUNCTIONS
+// ============================================================
+
+@function get-color($name, $shade: 300, $alpha: 1) {
+  @if map.has-key($special-colors, $name) {
+    $color: map.get($special-colors, $name);
+    @if $alpha != 1 and meta.type-of($color) == "color" { @return color.change($color, $alpha: $alpha); }
+    @return $color;
+  }
+  @if not map.has-key($colors, $name) { @error "get-color(): paleta '#{$name}' no existe."; }
+  $palette: map.get($colors, $name);
+  @if not map.has-key($palette, $shade) { @error "get-color(): tono '#{$shade}' no existe en '#{$name}'."; }
+  $color: map.get($palette, $shade);
+  @if $alpha != 1 { @return color.change($color, $alpha: $alpha); }
+  @return $color;
+}
+
+@function get($name, $alpha: 1) { @return get-color($name, 500, $alpha); }
+@function alpha($name, $shade: 500, $alpha: 0.5) { @return get-color($name, $shade, $alpha); }
+
+// ============================================================
+//  GENERATE CSS CUSTOM PROPERTIES (colors)
+// ============================================================
+
+@function _filter-palettes($map, $keys) {
+  @if meta.type-of($keys) == "string" { $keys: ($keys,); }
+  $result: ();
+  @each $key, $value in $map {
+    @if list.index($keys, $key) != null { $result: map.merge($result, ($key: $value)); }
+  }
+  @return $result;
+}
+
+@mixin generate-css-vars($root: ":root", $palettes: null, $include-special: true) {
+  $source: $colors;
+  @if $palettes != null {
+    @if meta.type-of($palettes) == "map" { $source: $palettes; }
+    @else { $source: _filter-palettes($colors, $palettes); }
+  }
+  #{$root} {
+    @each $name, $palette in $source {
+      @each $shade, $value in $palette { --#{$name}-#{$shade}: #{$value}; }
+    }
+    @if $include-special {
+      @each $name, $value in $special-colors { --#{$name}: #{$value}; }
+    }
+  }
+}
+
+// ============================================================
+//  COLOR UTILITY CLASS GENERATORS
+// ============================================================
+
+@mixin _utility-classes($property, $class-prefix, $palettes: null, $include-special: true) {
+  $palettes: if(sass($palettes == null): $colors; else: _filter-palettes($colors, $palettes));
+  @each $name, $palette in $palettes {
+    @each $shade, $value in $palette {
+      .#{$class-prefix}-#{$name}-#{$shade} { #{$property}: $value; }
+    }
+  }
+  @if $include-special {
+    @each $name, $value in $special-colors {
+      .#{$class-prefix}-#{$name} { #{$property}: $value; }
+    }
+  }
+}
+
+@mixin text-utilities($palettes: null, $special: true)   { @include _utility-classes(color, "text", $palettes, $special); }
+@mixin bg-utilities($palettes: null, $special: true)     { @include _utility-classes(background-color, "bg", $palettes, $special); }
+@mixin border-utilities($palettes: null, $special: true) { @include _utility-classes(border-color, "border", $palettes, $special); }
+
+@mixin hover-utilities($palettes: null, $special: true) {
+  $palettes: if(sass($palettes == null): $colors; else: _filter-palettes($colors, $palettes));
+  @each $name, $palette in $palettes {
+    @each $shade, $value in $palette {
+      .hover-text-#{$name}-#{$shade}:hover { color: $value; }
+      .hover-bg-#{$name}-#{$shade}:hover   { background-color: $value; }
+    }
+  }
+  @if $special {
+    @each $name, $value in $special-colors {
+      .hover-text-#{$name}:hover { color: $value; }
+      .hover-bg-#{$name}:hover   { background-color: $value; }
+    }
+  }
+}
+
+@mixin all-utilities($palettes: null, $special: true) {
+  @include text-utilities($palettes, $special);
+  @include bg-utilities($palettes, $special);
+  @include border-utilities($palettes, $special);
+  @include hover-utilities($palettes, $special);
+}
+
+// ============================================================
+//  THEME
+// ============================================================
+
+@mixin theme($mode, $overrides: ()) {
+  $base: $colors;
+  @if $mode == "dark" {
+    $base: ();
+    @each $name, $palette in $colors {
+      $new: ();
+      @each $shade in $shades {
+        $inverted: 800 - $shade;
+        $new: map.merge($new, ($shade: map.get($palette, $inverted)));
+      }
+      $base: map.merge($base, ($name: $new));
+    }
+  }
+  @if meta.type-of($overrides) == "map" { $base: map.merge($base, $overrides); }
+  @include generate-css-vars(":root[data-theme='#{$mode}']", $base, false);
+}

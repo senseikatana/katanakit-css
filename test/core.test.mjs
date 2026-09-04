@@ -17,7 +17,7 @@ import * as sass from 'sass';
 const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MAIN_ENTRY = path.join(PROJECT_ROOT, 'src', 'scss', 'main.scss');
 const DEMO_ENTRY = path.join(PROJECT_ROOT, 'src', 'scss', 'demo.scss');
-const LOAD_PATHS = [path.join(PROJECT_ROOT, 'src', 'scss', 'partials')];
+const LOAD_PATHS = [path.join(PROJECT_ROOT, 'src', 'scss')];
 
 let mainCss = null;
 let demoCss = null;

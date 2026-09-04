@@ -1,51 +1,48 @@
-// Fixture de humo: ejercita la API pública que estaba rota
+// Fixture de humo: ejercita la API pública
 // (breakpoints 2xl/3xl, grid-stack, grid-placement, theme dark)
-// y funciones de acceso. Se compila con --load-path src/scss/partials.
-@use "breakpoints" as bp;
-@use "grid" as g;
-@use "theme" as t;
+// y funciones de acceso. Compilado con loadPath src/scss.
+@use "mixins" as m;
 @use "functions" as f;
 @use "variables" as v;
-@use "colors" as c;
 
 // Breakpoints: los alias xxl/xxxl y x2l-down/x3l-down deben compilar
 .stack {
-  @include g.grid-stack(grid, "parent", ("span", "div"), 2, 1);
+  @include m.grid-stack(grid, "parent", ("span", "div"), 2, 1);
 }
 
 .stack-item {
-  @include g.grid-stack-item(3, 2);
+  @include m.grid-stack-item(3, 2);
 }
 
-@include bp.xxl {
+@include m.xxl {
   .bp-xxl { color: red; }
 }
 
-@include bp.xxxl {
+@include m.xxxl {
   .bp-xxxl { color: red; }
 }
 
-@include bp.x2l-down {
+@include m.x2l-down {
   .bp-x2l-down { color: blue; }
 }
 
-@include bp.x3l-down {
+@include m.x3l-down {
   .bp-x3l-down { color: blue; }
 }
 
 // grid-placement (antes documentado como grid-place) y grid-item-full
 .placement {
-  @include g.grid-placement(2, 4, 1, 2);
+  @include m.grid-placement(2, 4, 1, 2);
 }
 
 .full {
-  @include g.grid-item-full($col: "2 / 4");
+  @include m.grid-item-full($col: "2 / 4");
 }
 
 // Acceso a tokens y funciones
 .tokens {
-  color: c.get-color("neutral", 500);
-  background: c.alpha("info", 300, 0.5);
+  color: v.get-color("neutral", 500);
+  background: v.alpha("info", 300, 0.5);
   padding: v.spacing(4) f.rem(16px);
   border-radius: v.radius("lg");
   font-size: f.fluid(16px, 24px);
@@ -57,4 +54,4 @@
 }
 
 // Tema oscuro: debe invertir los 7 tonos de cada paleta
-@include t.theme("dark");
+@include v.theme("dark");

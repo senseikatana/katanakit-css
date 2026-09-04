@@ -17,7 +17,7 @@ import * as sass from 'sass';
 
 const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const FIXTURE = path.join(PROJECT_ROOT, 'test', 'fixtures', 'api-smoke.scss');
-const LOAD_PATHS = [path.join(PROJECT_ROOT, 'src', 'scss', 'partials')];
+const LOAD_PATHS = [path.join(PROJECT_ROOT, 'src', 'scss')];
 
 let css = null;
 

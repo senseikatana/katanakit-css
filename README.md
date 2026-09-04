@@ -141,23 +141,19 @@ sheet (see [override tokens](#design-tokens-and-how-to-override-them)).
 
 ```scss
 // theme.scss — a custom sheet: reset + tokens + a few utilities
-@use "katanakit-css/src/scss/partials/reset";
-@use "katanakit-css/src/scss/partials/variables" as v;
-@use "katanakit-css/src/scss/partials/functions" as f;
-@use "katanakit-css/src/scss/partials/breakpoints" as bp;
-@use "katanakit-css/src/scss/partials/colors" as c;
-@use "katanakit-css/src/scss/partials/grid" as g;
-@use "katanakit-css/src/scss/partials/flex" as fl;
-@use "katanakit-css/src/scss/partials/utils" as u;
-@use "katanakit-css/src/scss/partials/apply" as a;
+@use "katanakit-css/src/scss/reset";
+@use "katanakit-css/src/scss/variables" as v;
+@use "katanakit-css/src/scss/functions" as f;
+@use "katanakit-css/src/scss/mixins" as m;
+@use "katanakit-css/src/scss/utilities" as u;
 
 // Tokens and color variables in :root
 @include v.generate-css-tokens();
-@include c.generate-css-vars();
+@include v.generate-css-vars();
 
 // Color utilities only (text/bg/border + hover) — skip what you do not need
-@include c.text-utilities();
-@include c.bg-utilities();
+@include v.text-utilities();
+@include v.bg-utilities();
 
 // Opt-in utility generators, or nothing at all
 @include u.generate-all-utilities();
@@ -175,7 +171,7 @@ generators above. See [Utility classes](#utility-classes).
 
 ## Design tokens and how to override them
 
-Tokens live in `src/scss/partials/_variables.scss` as `!default` maps, exposed
+Tokens live in `src/scss/_variables.scss` as `!default` maps, exposed
 as CSS custom properties by `generate-css-tokens()`:
 
 | Family                | Map                  | Keys                                                         | Example variables              |
@@ -194,7 +190,7 @@ Accessor functions let you read a token at build time and accept a string or a
 number depending on the key type:
 
 ```scss
-@use "katanakit-css/src/scss/partials/variables" as v;
+@use "katanakit-css/src/scss/variables" as v;
 
 .demo {
   padding: v.spacing(4);            // 1rem
@@ -216,7 +212,7 @@ All token maps are `!default`, so you can override them with the standard Sass
 ```scss
 // 1) Configure the tokens first — must be the first load of the variables
 //    module in the compilation.
-@use "katanakit-css/src/scss/partials/variables" with (
+@use "katanakit-css/src/scss/variables" with (
   $font-families: ("sans-serif": (system-ui, sans-serif), "mono": (monospace)),
   $breakpoint-sizes: ("xs": 0, "sm": 600px, "md": 900px, "lg": 1200px, "xl": 1400px, "2xl": 1600px, "3xl": 1920px),
   $spacing-scale: ("0": 0, "1": 0.25rem, "2": 0.5rem, "3": 0.75rem, "4": 1rem, "6": 1.5rem, "8": 2rem)
@@ -233,7 +229,7 @@ the `with` clause must be the first usage of the `variables` module.
 
 ## Colors
 
-Colors live in `src/scss/partials/_colors.scss`. Six palettes of seven tones
+Colors live in `src/scss/_variables.scss` (merged from the former `_colors.scss`). Six palettes of seven tones
 each (100 is the lightest, 700 the darkest):
 
 | Palette   | Hue / character              |
@@ -251,21 +247,21 @@ Plus `$special-colors`: `black`, `white`, `transparent`, `current`
 Use the accessors from SCSS:
 
 ```scss
-@use "katanakit-css/src/scss/partials/colors" as c;
+@use "katanakit-css/src/scss/variables" as v;
 
 .box {
-  color: c.get-color("neutral", 500);       // 7th shade
-  color: c.get-color("info", 300, 0.5);     // with alpha
-  background: c.get("info");                // shorthand for shade 500
-  border-color: c.alpha("warning", 400, 0.25);
+  color: v.get-color("neutral", 500);       // 7th shade
+  color: v.get-color("info", 300, 0.5);     // with alpha
+  background: v.get("info");                // shorthand for shade 500
+  border-color: v.alpha("warning", 400, 0.25);
 }
 ```
 
 Generate custom properties and/or utility classes with the color mixins:
 
 ```scss
-@include c.generate-css-vars();        // --neutral-100 … --success-700, --white, …
-@include c.all-utilities();            // .text-*, .bg-*, .border-*, hover variants
+@include v.generate-css-vars();        // --neutral-100 … --success-700, --white, …
+@include v.all-utilities();            // .text-*, .bg-*, .border-*, hover variants
 ```
 
 ```html
@@ -276,16 +272,17 @@ Generate custom properties and/or utility classes with the color mixins:
 ```
 
 Color utilities can be filtered by palette and specials toggled off, e.g.
-`@include c.all-utilities("info", false)` or
-`@include c.text-utilities((neutral, success))`. See
-[docs/API-Reference.md](docs/API-Reference.md#colors-as-c) for the full
+`@include v.all-utilities("info", false)` or
+`@include v.text-utilities((neutral, success))`. See
+[docs/API-Reference.md](docs/API-Reference.md#colors-as-v) for the full
 signatures.
 
 ---
 
 ## Breakpoints
 
-Breakpoints are defined in `partials/_breakpoints.scss`:
+Breakpoints are defined in `_mixins.scss` (merged from the former
+`_breakpoints.scss`):
 
 `xs` 0 · `sm` 640 · `md` 768 · `lg` 1024 · `xl` 1280 · `2xl` 1536 · `3xl` 1920
 (px).
@@ -294,15 +291,15 @@ Use the generic mixin for `up`, `down`, `only` and `between` (the alias `bp`
 accepts the same arguments):
 
 ```scss
-@use "katanakit-css/src/scss/partials/breakpoints" as bp;
+@use "katanakit-css/src/scss/mixins" as m;
 
 .card {
   padding: 1rem;
 
-  @include bp.breakpoint("md", up) { padding: 2rem; }
-  @include bp.breakpoint("sm", down) { padding: 0.5rem; }
-  @include bp.breakpoint("md", only, "lg") { /* only md */ }
-  @include bp.breakpoint("sm", between, "lg") { /* sm ≤ viewport < lg */ }
+  @include m.breakpoint("md", up) { padding: 2rem; }
+  @include m.breakpoint("sm", down) { padding: 0.5rem; }
+  @include m.breakpoint("md", only, "lg") { /* only md */ }
+  @include m.breakpoint("sm", between, "lg") { /* sm ≤ viewport < lg */ }
 }
 ```
 
