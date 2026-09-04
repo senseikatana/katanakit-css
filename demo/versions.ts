@@ -1,5 +1,5 @@
 // ============================================================
-//  demo/versions.js — Catálogo de versiones publicadas del
+//  demo/versions.ts — Catálogo de versiones publicadas del
 //  framework. Cada entrada apunta al CSS compilado que genera
 //  `yarn build:versions` en public/versions/<tag>.css.
 //
@@ -9,7 +9,19 @@
 //     "latest" que se usa por defecto).
 // ============================================================
 
-export default {
+export interface ReleasedVersion {
+  tag: string;
+  label: string;
+}
+
+export interface VersionCatalog {
+  current: string;
+  released: ReleasedVersion[];
+}
+
+const versions: VersionCatalog = {
   current: '0.1.0',
   released: [{ tag: '0.1.0', label: 'v0.1.0 — first release' }],
 };
+
+export default versions;

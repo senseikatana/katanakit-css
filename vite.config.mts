@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import purgecss from 'vite-plugin-purgecss';
 
-const PORT = process.env.PORT || 4321;
+const PORT = Number(process.env.PORT) || 4321;
 
 export default defineConfig({
   root: '.',

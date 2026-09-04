@@ -46,16 +46,19 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
     "docs:dev": "astro dev --root site",
     "docs:build": "astro build --root site",
     "docs:preview": "astro preview --root site"
   },
   "devDependencies": {
     "@astrojs/starlight": "^0.42.0",
+    "@types/node": "^26.4.1",
     "astro": "^7.3.1",
     "autoprefixer": "^10.5.5",
     "postcss": "^8.5.26",
     "sass": "^1.103.0",
+    "typescript": "^7.0.2",
     "vite": "^8.2.2",
     "vite-plugin-purgecss": "^0.2.13",
     "vitest": "^5.0.0"

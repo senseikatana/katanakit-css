@@ -1,9 +1,9 @@
 // ============================================================
-// functions.test.mjs — Regression assertions for the public
+// functions.test.ts — Regression assertions for the public
 // functions API: unit conversion (rem/px/fluid), token accessors
 // (spacing/duration/z/radius) and color accessors
 // (get-color/alpha). Compiles test/fixtures/functions-regression.scss
-// in memory with loadPaths ['src/scss/partials'].
+// in memory with loadPaths ['src/scss'].
 //
 // NOTE: fixtures in test/fixtures/ must NOT be named after the
 // partials (functions.scss, variables.scss, …) because Sass
@@ -24,25 +24,29 @@ const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), 
 const FIXTURE = path.join(PROJECT_ROOT, 'test', 'fixtures', 'functions-regression.scss');
 const LOAD_PATHS = [path.join(PROJECT_ROOT, 'src', 'scss')];
 
-let testRule = null;
+let testRule: string | null = null;
 
-function getTestRule() {
+function getTestRule(): string {
   if (testRule === null) {
     const output = sass.compile(FIXTURE, { loadPaths: LOAD_PATHS }).css;
     const match = output.match(/\.test\s*\{([^}]*)\}/);
     assert.ok(match, 'expected the compiled fixture to contain a .test rule');
-    testRule = match[1];
+    testRule = match![1] ?? assert.fail('expected the .test rule to have a body');
   }
   return testRule;
 }
 
-function declarationValue(property) {
-  const rule = getTestRule();
-  const match = rule.match(new RegExp(`${property}:\\s*([^;]+);`));
-  return match ? match[1].trim() : null;
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
-function expectDeclaration(property, expected) {
+function declarationValue(property: string): string | null {
+  const rule = getTestRule();
+  const match = rule.match(new RegExp(`${property}:\\s*([^;]+);`));
+  return match?.[1]?.trim() ?? null;
+}
+
+function expectDeclaration(property: string, expected: string): void {
   const actual = declarationValue(property);
   assert.equal(
     actual,
@@ -56,7 +60,7 @@ describe('functions: fixture test/fixtures/functions-regression.scss', () => {
     try {
       getTestRule();
     } catch (error) {
-      assert.fail(`compiling ${FIXTURE} failed: ${error.message}`);
+      assert.fail(`compiling ${FIXTURE} failed: ${errorMessage(error)}`);
     }
   });
 

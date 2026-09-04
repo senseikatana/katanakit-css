@@ -1,5 +1,5 @@
 // ============================================================
-// core.test.mjs — Compilation and content assertions for the
+// core.test.ts — Compilation and content assertions for the
 // public entry (src/scss/main.scss) and the demo entry
 // (src/scss/demo.scss).
 //
@@ -19,29 +19,33 @@ const MAIN_ENTRY = path.join(PROJECT_ROOT, 'src', 'scss', 'main.scss');
 const DEMO_ENTRY = path.join(PROJECT_ROOT, 'src', 'scss', 'demo.scss');
 const LOAD_PATHS = [path.join(PROJECT_ROOT, 'src', 'scss')];
 
-let mainCss = null;
-let demoCss = null;
+let mainCss: string | null = null;
+let demoCss: string | null = null;
 
-function getMainCss() {
+function getMainCss(): string {
   if (mainCss === null) {
     mainCss = sass.compile(MAIN_ENTRY, { loadPaths: LOAD_PATHS }).css;
   }
   return mainCss;
 }
 
-function getDemoCss() {
+function getDemoCss(): string {
   if (demoCss === null) {
     demoCss = sass.compile(DEMO_ENTRY, { loadPaths: LOAD_PATHS }).css;
   }
   return demoCss;
 }
 
-function expectCompiles(entry, compile) {
-  let css;
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+function expectCompiles(entry: string, compile: () => string): void {
+  let css: string;
   try {
     css = compile();
   } catch (error) {
-    assert.fail(`compiling ${entry} failed: ${error.message}`);
+    assert.fail(`compiling ${entry} failed: ${errorMessage(error)}`);
   }
   assert.ok(css.length > 0, `compiled CSS of ${entry} should not be empty`);
 }
@@ -60,7 +64,7 @@ describe('core: public entry (src/scss/main.scss)', () => {
 
   it('should include the sizing, spacing and layout utilities', () => {
     const css = getMainCss();
-    const checks = [
+    const checks: [string, string | null][] = [
       ['.w-screen', 'width: 100vw'],
       ['.p-05', null],
       ['.p-1-5', null],
