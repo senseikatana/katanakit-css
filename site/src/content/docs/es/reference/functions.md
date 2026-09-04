@@ -1,6 +1,6 @@
 ---
 title: Funciones
-description: Funciones puras auxiliares: unidades, tipografia fluida y manipulacion de color.
+description: "Funciones puras auxiliares: unidades, tipografia fluida y manipulacion de color."
 sidebar:
   order: 1
 ---

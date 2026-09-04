@@ -1,6 +1,6 @@
 ---
 title: Flexbox
-description: Mixins de layout Flexbox: contenedores, espaciado y dimensiones de elementos.
+description: "Mixins de layout Flexbox: contenedores, espaciado y dimensiones de elementos."
 sidebar:
   order: 2
 ---

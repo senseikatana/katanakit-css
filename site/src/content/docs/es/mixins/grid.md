@@ -1,6 +1,6 @@
 ---
 title: Grid
-description: Mixins de layout CSS Grid: contenedores, colocacion, apilamiento y masonry.
+description: "Mixins de layout CSS Grid: contenedores, colocacion, apilamiento y masonry."
 sidebar:
   order: 1
 ---

@@ -1,6 +1,6 @@
 ---
 title: Ejemplos
-description: Ejemplos completos funcionales: tokens, layout, modo oscuro y componentes.
+description: "Ejemplos completos funcionales: tokens, layout, modo oscuro y componentes."
 sidebar:
   order: 4
 ---

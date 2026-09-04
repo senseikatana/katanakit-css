@@ -3,7 +3,7 @@ node_modules/
 .pnpm-store/
 .yarn/
 bun.lockb
-
+!.github/
 # Carpetas y archivos ocultos del sistema
 .*
 !.gitignore
