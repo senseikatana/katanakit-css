@@ -102,7 +102,7 @@ describe('api-smoke: fixture test/fixtures/api-smoke.scss', () => {
   it('should expose tokens with spacing, font family and a multi-value shadow', () => {
     const rule = extractRule(getCss(), '.tokens');
     assert.ok(rule, 'expected a rule for ".tokens"');
-    assert.ok(rule!.includes('padding: 1rem 1rem'), 'expected padding: 1rem 1rem');
+    assert.ok(rule!.includes('padding: 1rem 1.6rem'), 'expected padding: 1rem 1.6rem');
 
     const fontFamily = declarationValue(rule!, 'font-family');
     assert.ok(
