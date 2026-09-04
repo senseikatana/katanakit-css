@@ -12,8 +12,8 @@ $breakpoints: (
   "md": 768px,
   "lg": 1024px,
   "xl": 1280px,
-  "x2l": 1536px,
-  "x3l": 1920px
+  "2xl": 1536px,
+  "3xl": 1920px
 ) !default;
 
 // ============================================================
@@ -87,6 +87,10 @@ $breakpoints: (
 @mixin xl-down  { @include breakpoint("xl", down)  { @content; } }
 @mixin x2l-down { @include breakpoint("2xl", down) { @content; } }
 @mixin x3l-down { @include breakpoint("3xl", down) { @content; } }
+
+// Aliases con la convención de los mixins *-down (nombres canónicos).
+@mixin xxl-down { @include x2l-down { @content; } }
+@mixin xxxl-down { @include x3l-down { @content; } }
 
 // ============================================================
 //  UTILIDADES ADICIONALES (contexto)

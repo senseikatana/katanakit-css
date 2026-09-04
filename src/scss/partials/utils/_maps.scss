@@ -27,7 +27,7 @@ $sizing-map: (
   "64": 16rem,
   "auto": auto,
   "full": 100%,
-  "screen": 100vh,
+  "screen": 100vw,
   "min": min-content,
   "max": max-content,
   "fit": fit-content
@@ -112,7 +112,7 @@ $justify-content-map: (
   "evenly": space-evenly
 )!default;
 
-$white-space-list: (nowrap, pre, normal);
+$white-space-list: (nowrap, pre, normal) !default;
 $overflow-wrap-list: (break-word,) !default;
 
 // --- EFECTOS ---
@@ -193,31 +193,37 @@ $opacity-values: (
 // --- TEXTO ---
 
 $font-weight-values: (
-    thin: 100,
-    light: 300,
-    normal: 500,
-    semibold: 700,
-    bold: 900
-);
+  "thin": 100,
+  "extralight": 200,
+  "light": 300,
+  "normal": 400,
+  "medium": 500,
+  "semibold": 600,
+  "bold": 700,
+  "extrabold": 800,
+  "black": 900
+) !default;
 
-$text-align-values: (left, center, right, justify, none, unset);
+$text-align-values: (left, center, right, justify) !default;
 
 // --- LAYOUT ---
 
 // --- DISPLAY UTILITIES ---
+// Map so the `hidden` key can map to the `none` value (`.hidden { display: none }`).
 $display-values: (
-  block,
-  inline-block,
-  inline,
-  flex,
-  inline-flex,
-  grid,
-  inline-grid,
-  table,
-  table-row,
-  table-cell,
-  none,
-  contents) !default;
+  block: block,
+  inline-block: inline-block,
+  inline: inline,
+  flex: flex,
+  inline-flex: inline-flex,
+  grid: grid,
+  inline-grid: inline-grid,
+  table: table,
+  table-row: table-row,
+  table-cell: table-cell,
+  hidden: none,
+  contents: contents
+) !default;
 // --- POSITION UTILITIES ---
 $position-values: (
   static,
@@ -227,4 +233,4 @@ $position-values: (
   sticky
 ) !default;
 
-$overflow-values: (auto, hidden, unset);
+$overflow-values: (auto, hidden, scroll, visible) !default;

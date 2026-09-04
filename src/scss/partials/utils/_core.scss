@@ -60,13 +60,13 @@
 ///
 /// @example scss
 ///   // Desde lista: (auto, hidden) → .overflow-auto, .overflow-hidden
-///   @include utility-classes((auto, hidden), overflow, 'overflow');
+///   @include utils-classes((auto, hidden), overflow, 'overflow');
 ///   
 ///   // Desde mapa: (auto: auto, hidden: hidden) → .overflow-auto, .overflow-hidden
-///   @include utility-classes((auto: auto, hidden: hidden), overflow, 'overflow');
+///   @include utils-classes((auto: auto, hidden: hidden), overflow, 'overflow');
 ///   
 ///   // Sin prefijo: (flex, grid) → .flex, .grid
-///   @include utility-classes((flex, grid), display);
+///   @include utils-classes((flex, grid), display);
 @mixin utils-classes($input, $property, $prefix: null) {
   @if meta.type-of($input) == "list" {
     @each $value in $input {
@@ -93,7 +93,7 @@
       }
     }
   } @else {
-    @error "utility-classes(): se esperaba lista o mapa, recibió #{meta.type-of($input)}.";
+    @error "utils-classes(): se esperaba lista o mapa, recibió #{meta.type-of($input)}.";
   }
 }
 
@@ -104,7 +104,7 @@
 /// @param {String} $prefix [''] - Prefijo para las clases.
 ///
 /// @example scss
-///   @include utility-classes-hover((info-300, danger-500), background-color, 'hover-bg');
+///   @include utils-classes-hover((info-300, danger-500), background-color, 'hover-bg');
 ///   // Genera: .hover-bg-info-300:hover { background-color: info-300; }
 @mixin utils-classes-hover($input, $property, $prefix: null) {
   @if meta.type-of($input) == "list" {
@@ -114,7 +114,7 @@
           #{$property}: #{$value};
         }
       } @else {
-        .#{$prefix}\:#{$value}:hover {
+        .hover-#{$value}:hover {
           #{$property}: #{$value};
         }
       }
@@ -126,7 +126,7 @@
           #{$property}: #{$value};
         }
       } @else {
-        .#{$prefix}\:#{$key}:hover {
+        .hover-#{$key}:hover {
           #{$property}: #{$value};
         }
       }

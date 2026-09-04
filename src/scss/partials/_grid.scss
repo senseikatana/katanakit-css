@@ -3,7 +3,6 @@
 @use "sass:map";
 @use "sass:list";
 @use "sass:string";
-@use "variables" as v;
 @use "breakpoints" as bp;
 @use "functions" as f;
 
@@ -170,8 +169,8 @@ $grid-columns-default: 12 !default;
   place-self: center center;
 }
 
-@mixin grid-item-full($col: 1 / -1, $row: null) {
-  grid-column: 1 / -1;
+@mixin grid-item-full($col: "1 / -1", $row: null) {
+  grid-column: #{$col};
   @if $row != null {
     grid-row: $row;
   }
@@ -265,11 +264,11 @@ $grid-columns-default: 12 !default;
       }
       @if $parent != null {
         .#{$parent} > #{$child} {
-          @include grid-place($col, $col + 1, $row, $row + 1);
+          @include grid-placement($col, $col + 1, $row, $row + 1);
         }
       } @else {
         & > #{$child} {
-          @include grid-place($col, $col + 1, $row, $row + 1);
+          @include grid-placement($col, $col + 1, $row, $row + 1);
         }
       }
     }
@@ -279,5 +278,5 @@ $grid-columns-default: 12 !default;
 @mixin grid-stack-item($col: 1, $row: 1) {
   $col: _stack-index($col, "$col");
   $row: _stack-index($row, "$row");
-  @include grid-place($col, $col + 1, $row, $row + 1);
+  @include grid-placement($col, $col + 1, $row, $row + 1);
 }

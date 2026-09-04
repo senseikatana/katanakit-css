@@ -1,7 +1,7 @@
 @use "sass:map";
-@use "sass:meta";
 @use "sass:list";
-@use "sass:string";
+@use "utils/maps" as m;
+@use "colors" as c;
 
 // ============================================================
 //  REGISTRO DE UTILIDADES (para @apply)
@@ -75,10 +75,9 @@ $_utility-registry: ();
 @include register-utility("grid-cols-12", (grid-template-columns: repeat(12, 1fr)));
 @include register-utility("col-span-full", (grid-column: list.slash(1, -1)));
 
-// Spacing (ejemplos - puedes generar más dinámicamente)
-$spacing-scale: (0: 0, 1: 0.25rem, 2: 0.5rem, 3: 0.75rem, 4: 1rem, 6: 1.5rem, 8: 2rem, 12: 3rem, 16: 4rem);
-
-@each $key, $value in $spacing-scale {
+// Spacing — la escala sale de utils/_maps.scss ($spacing-map),
+// la misma fuente de verdad que genera las clases .p-*, .m-*, .gap-*.
+@each $key, $value in m.$spacing-map {
   @include register-utility("p-#{$key}", (padding: $value));
   @include register-utility("px-#{$key}", (padding-left: $value, padding-right: $value));
   @include register-utility("py-#{$key}", (padding-top: $value, padding-bottom: $value));
@@ -96,6 +95,8 @@ $spacing-scale: (0: 0, 1: 0.25rem, 2: 0.5rem, 3: 0.75rem, 4: 1rem, 6: 1.5rem, 8:
   @include register-utility("mr-#{$key}", (margin-right: $value));
   
   @include register-utility("gap-#{$key}", (gap: $value));
+  @include register-utility("gap-x-#{$key}", (column-gap: $value));
+  @include register-utility("gap-y-#{$key}", (row-gap: $value));
 }
 
 // Typography
@@ -165,15 +166,79 @@ $spacing-scale: (0: 0, 1: 0.25rem, 2: 0.5rem, 3: 0.75rem, 4: 1rem, 6: 1.5rem, 8:
 @include register-utility("overflow-visible", (overflow: visible));
 @include register-utility("overflow-scroll", (overflow: scroll));
 
-// Colors (ejemplos - genera dinámicamente desde tu mapa de colores)
-@include register-utility("text-white", (color: hsl(0, 0%, 97%)));
-@include register-utility("text-black", (color: hsl(0, 0%, 3%)));
-@include register-utility("bg-white", (background-color: hsl(0, 0%, 97%)));
-@include register-utility("bg-black", (background-color: hsl(0, 0%, 3%)));
-@include register-utility("bg-transparent", (background-color: transparent));
+// Colors — valores tomados de $special-colors (misma fuente de verdad que
+// las clases .bg-white / .text-white generadas por colors.all-utilities()).
+@include register-utility("text-white", (color: c.get-color("white")));
+@include register-utility("text-black", (color: c.get-color("black")));
+@include register-utility("bg-white", (background-color: c.get-color("white")));
+@include register-utility("bg-black", (background-color: c.get-color("black")));
+@include register-utility("bg-transparent", (background-color: c.get-color("transparent")));
 
 // Transitions
 @include register-utility("transition", (transition: all 150ms ease));
 @include register-utility("transition-colors", (transition: (color 150ms ease, background-color 150ms ease, border-color 150ms ease)));
 @include register-utility("transition-opacity", (transition: opacity 150ms ease));
 @include register-utility("transition-transform", (transition: transform 150ms ease));
+
+// ============================================================
+//  REGISTRO DERIVADO DE LOS MAPAS (utils/_maps.scss)
+//  Mantiene el registro de @apply sincronizado con las clases
+//  que emiten los generadores ópt-in. Misma fuente de verdad.
+// ============================================================
+
+// Efectos
+@each $key, $value in m.$radius-map {
+  @include register-utility("rounded-#{$key}", (border-radius: $value));
+}
+@each $key, $value in m.$shadow-map {
+  @include register-utility("shadow-#{$key}", (box-shadow: $value));
+}
+@each $key, $value in m.$z-layers-map {
+  @include register-utility("z-#{$key}", (z-index: $value));
+}
+@each $key, $value in m.$transition-duration-map {
+  @include register-utility("duration-#{$key}", (transition-duration: $value));
+}
+@each $key, $value in m.$transition-timing-map {
+  @include register-utility("ease-#{$key}", (transition-timing-function: $value));
+}
+@each $key, $value in m.$opacity-values {
+  @include register-utility("opacity-#{$key}", (opacity: $value));
+}
+
+// Layout
+@each $key, $value in m.$display-values {
+  @include register-utility($key, (display: $value));
+}
+@each $value in m.$position-values {
+  @include register-utility($value, (position: $value));
+}
+@each $value in m.$overflow-values {
+  @include register-utility("overflow-#{$value}", (overflow: $value));
+}
+@each $value in m.$text-align-values {
+  @include register-utility("text-#{$value}", (text-align: $value));
+}
+@each $key, $value in m.$font-weight-values {
+  @include register-utility("font-#{$key}", (font-weight: $value));
+}
+@each $value in m.$white-space-list {
+  @include register-utility("whitespace-#{$value}", (white-space: $value));
+}
+@each $value in m.$overflow-wrap-list {
+  @include register-utility("wrap-#{$value}", (overflow-wrap: $value));
+}
+
+// Flexbox
+@each $key, $value in m.$flex-direction-map {
+  @include register-utility("flex-#{$key}", (flex-direction: $value));
+}
+@each $value in m.$flex-wrap-list {
+  @include register-utility("flex-#{$value}", (flex-wrap: $value));
+}
+@each $key, $value in m.$align-items-map {
+  @include register-utility("items-#{$key}", (align-items: $value));
+}
+@each $key, $value in m.$justify-content-map {
+  @include register-utility("justify-#{$key}", (justify-content: $value));
+}
