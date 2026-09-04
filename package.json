@@ -38,8 +38,9 @@
   "style": "dist/css/katanakit.css",
   "scripts": {
     "dev": "astro dev --root site --port 4321",
-    "build": "npm run build:css && astro build --root site",
+    "build": "npm run build:css && npm run build:framework-css && astro build --root site",
     "build:css": "sass src/scss/main.scss dist/css/katanakit.css --no-source-map --style=compressed",
+    "build:framework-css": "bash scripts/build-framework-css.sh",
     "preview": "astro preview --root site",
     "demo": "vite --config vite.config.mts",
     "demo:build": "vite build --config vite.config.mts",

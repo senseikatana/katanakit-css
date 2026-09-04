@@ -45,6 +45,9 @@ jobs:
       - name: Build CSS artifact
         run: yarn build:css
 
+      - name: Build framework CSS for docs site
+        run: bash scripts/build-framework-css.sh
+
       - name: Sync versions.json from git tags
         run: bash scripts/sync-versions.sh
 
@@ -61,7 +64,7 @@ jobs:
           mkdir -p "$DEST"
           # Copy the built site into the versioned directory.
           # Exclude the versions/ dir itself to avoid recursion.
-          for item in index.html getting-started core utilities mixins reference es _astro pagefind favicon.svg; do
+          for item in index.html getting-started core utilities mixins reference es _astro pagefind favicon.svg framework.css; do
             [ -e "site/dist/$item" ] && cp -r "site/dist/$item" "$DEST/"
           done
           echo "✓ Snapshot saved to $DEST"

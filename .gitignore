@@ -69,5 +69,8 @@ Thumbs.db
 # Versiones compiladas por build:versions (artefacto de build)
 public/versions/*.css
 
+# Framework CSS compilado para el sitio de docs (artefacto de build)
+site/public/framework.css
+
 # Keep folder placeholders
 !.gitkeep

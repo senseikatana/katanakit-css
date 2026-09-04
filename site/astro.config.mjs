@@ -132,11 +132,20 @@ export default defineConfig({
           ],
         },
       ],
+      head: [
+        {
+          tag: 'link',
+          attrs: {
+            rel: 'stylesheet',
+            href: '/framework.css',
+          },
+        },
+      ],
       components: {
         SiteTitle: './src/components/VersionTitle.astro',
         ThemeSelect: './src/components/ThemeDropdown.astro',
       },
-      customCss: ['./src/styles/custom.css', './src/styles/framework.scss'],
+      customCss: ['./src/styles/custom.css'],
     }),
   ],
 });
