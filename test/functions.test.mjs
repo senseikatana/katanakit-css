@@ -14,7 +14,7 @@
 // Deterministic: no network, no git, read-only over src/ and dist/.
 // ============================================================
 
-import { describe, it } from 'node:test';
+import { describe, it } from 'vitest';
 import assert from 'node:assert/strict';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';

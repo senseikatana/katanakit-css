@@ -38,17 +38,26 @@
   "style": "dist/css/katanakit.css",
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:css && npm run build:demo",
+    "build": "npm run build:css && npm run build:versions && npm run build:demo",
+    "build:all": "npm run build && npm run docs:build",
     "build:css": "sass src/scss/main.scss dist/css/katanakit.css --no-source-map --style=compressed",
+    "build:versions": "sass src/scss/main.scss public/versions/0.1.0.css --no-source-map --style=compressed",
     "build:demo": "vite build",
     "preview": "vite preview",
-    "test": "node --test \"test/**/*.test.mjs\""
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "docs:dev": "astro dev --root site",
+    "docs:build": "astro build --root site",
+    "docs:preview": "astro preview --root site"
   },
   "devDependencies": {
+    "@astrojs/starlight": "^0.42.0",
+    "astro": "^7.3.1",
     "autoprefixer": "^10.5.5",
     "postcss": "^8.5.26",
     "sass": "^1.103.0",
     "vite": "^8.2.2",
-    "vite-plugin-purgecss": "^0.2.13"
+    "vite-plugin-purgecss": "^0.2.13",
+    "vitest": "^5.0.0"
   }
 }
