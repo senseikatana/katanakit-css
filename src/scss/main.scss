@@ -1,16 +1,32 @@
-@use "./partials/functions" as f;
+@use "./partials/reset";
 @use "./partials/variables" as v;
-@use "./partials/reset" as r;
-@use "./partials/breakpoints" as bp;
-@use "./partials/theme" as t;
 @use "./partials/colors" as c;
-@use "./partials/grid" as gr;
-@use "./partials/flex" as fl;
 @use "./partials/utils" as u;
-@use "./partials/apply" as a;
 
-// Aquí van tus estilos personalizados usando @apply
-@use "./components/index";
+// ============================================================
+//  KATANAKIT CSS — ENTRY PÚBLICO
+//  Genera la hoja completa del framework: reset, tokens como
+//  custom properties en :root, variables de color y todas las
+//  clases utilitarias.
+//
+//  Este entry NO incluye componentes: los componentes de
+//  ejemplo viven en components/_index.scss y se importan desde
+//  tu proyecto (o desde demo.scss).
+//
+//  Para componer una hoja a medida (solo ciertos módulos o
+//  utilidades ópt-in) importa los partials individualmente:
+//    @use "katanakit-css/src/scss/partials/breakpoints" as bp;
+//    @use "katanakit-css/src/scss/partials/grid" as g;
+//    @use "katanakit-css/src/scss/partials/functions" as f;
+//    @use "katanakit-css/src/scss/partials/apply" as a;
+// ============================================================
 
-// Generar todas las utilidades de color
+// Custom properties de tokens y de colores en :root
+@include v.generate-css-tokens();
+@include c.generate-css-vars();
+
+// Utilidades de color: .text-*, .bg-*, .border-* y variantes hover
 @include c.all-utilities();
+
+// Generadores ópt-in de utilidades: sizing, flex, efectos y layout
+@include u.generate-all-utilities();
