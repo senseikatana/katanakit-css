@@ -1,3 +1,6 @@
 // Entry de la demo para Vite: importa el SCSS (framework + componentes de
-// ejemplo). Vite lo compila con HMR en dev y lo extrae como <link> en build.
+// ejemplo) y arranca el selector de versiones.
 import '../src/scss/demo.scss';
+import { initVersionSwitcher } from './version-switcher.js';
+
+initVersionSwitcher();

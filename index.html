@@ -6,14 +6,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KatanaKIT CSS — Demo</title>
   <script type="module" src="/demo/main.js"></script>
+  <!-- CSS de versiones publicadas (ver demo/version-switcher.js) -->
+  <link rel="stylesheet" id="kk-version-css" disabled />
 </head>
 
 <body class="bg-neutral-100 text-neutral-500">
   <main class="p-8">
 
+    <!-- Barra de versión -->
+    <div class="p-4 rounded shadow bg-white mb-8">
+      <label for="kk-version-select" class="text-neutral-400">Framework version:</label>
+      <select id="kk-version-select" aria-label="Framework version" class="ml-4">
+        <option value="dev" selected>dev — live SCSS (HMR)</option>
+      </select>
+    </div>
+
     <!-- Hero -->
     <header class="p-8 rounded shadow bg-white">
-      <h1 class="text-info-500">SCSS Mini Framework</h1>
+      <h1 class="text-info-500">KatanaKIT CSS</h1>
       <p class="text-neutral-300">Utilidades generadas desde SCSS + componentes con @apply.</p>
     </header>
 
