@@ -9,7 +9,10 @@
 @use "sass:string";
 @use "sass:list";
 
-$base-font-size: 16px !default;
+// Root font-size. Must match the --root-font-size you set in the reset
+// (62.5% → 10px on 16px browsers). This makes 1rem = 10px, so rem()
+// and px() produce values where rem ≈ px.
+$base-font-size: 10px !default;
 
 // ============================================================
 //  HELPERS PRIVADOS

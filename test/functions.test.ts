@@ -64,13 +64,13 @@ describe('functions: fixture test/fixtures/functions-regression.scss', () => {
     }
   });
 
-  it('should convert px and unitless values to rem', () => {
-    expectDeclaration('rem-from-px', '1rem');
-    expectDeclaration('rem-from-unitless', '1rem');
+  it('should convert px and unitless values to rem (base 10px)', () => {
+    expectDeclaration('rem-from-px', '1.6rem');
+    expectDeclaration('rem-from-unitless', '1.6rem');
   });
 
-  it('should convert rem to px', () => {
-    expectDeclaration('px-from-rem', '16px');
+  it('should convert rem to px (base 10px)', () => {
+    expectDeclaration('px-from-rem', '10px');
   });
 
   it('should return a clamp() expression from fluid', () => {

@@ -1,6 +1,6 @@
 // ============================================================
 //  site/astro.config.mjs — Sitio de documentación KatanaKIT CSS
-//  (Astro + Starlight).
+//  (Astro + Starlight), estilo tailwindcss.com.
 // ============================================================
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
@@ -25,15 +25,101 @@ export default defineConfig({
           label: 'Start Here',
           items: [
             { label: 'Introduction', link: '/katanakit-css/' },
-            { label: 'Getting Started', slug: 'getting-started' },
+            { label: 'Installation', slug: 'getting-started' },
           ],
         },
         {
-          label: 'Guides',
+          label: 'Core Concepts',
           items: [
-            { label: 'API Reference', slug: 'api-reference' },
-            { label: 'Architecture', slug: 'architecture' },
-            { label: 'Roadmap', slug: 'roadmap' },
+            { label: 'Design Tokens', slug: 'core/tokens' },
+            { label: 'Colors', slug: 'core/colors' },
+            { label: 'Breakpoints', slug: 'core/breakpoints' },
+            { label: 'Dark Mode', slug: 'core/dark-mode' },
+            { label: '@apply', slug: 'core/apply' },
+          ],
+        },
+        {
+          label: 'Layout',
+          collapsed: true,
+          items: [
+            { label: 'Display', slug: 'utilities/display' },
+            { label: 'Position', slug: 'utilities/position' },
+            { label: 'Overflow', slug: 'utilities/overflow' },
+            { label: 'Z-Index', slug: 'utilities/z-index' },
+          ],
+        },
+        {
+          label: 'Spacing',
+          collapsed: true,
+          items: [
+            { label: 'Padding', slug: 'utilities/padding' },
+            { label: 'Margin', slug: 'utilities/margin' },
+            { label: 'Gap', slug: 'utilities/gap' },
+          ],
+        },
+        {
+          label: 'Sizing',
+          collapsed: true,
+          items: [{ label: 'Width & Height', slug: 'utilities/sizing' }],
+        },
+        {
+          label: 'Flexbox',
+          collapsed: true,
+          items: [
+            { label: 'Flex Direction', slug: 'utilities/flex-direction' },
+            { label: 'Flex Wrap', slug: 'utilities/flex-wrap' },
+            { label: 'Align Items', slug: 'utilities/align-items' },
+            { label: 'Justify Content', slug: 'utilities/justify-content' },
+          ],
+        },
+        {
+          label: 'Typography',
+          collapsed: true,
+          items: [
+            { label: 'Font Size', slug: 'utilities/font-size' },
+            { label: 'Font Weight', slug: 'utilities/font-weight' },
+            { label: 'Text Align', slug: 'utilities/text-align' },
+            { label: 'White Space', slug: 'utilities/whitespace' },
+          ],
+        },
+        {
+          label: 'Colors',
+          collapsed: true,
+          items: [
+            { label: 'Text Color', slug: 'utilities/text-color' },
+            { label: 'Background Color', slug: 'utilities/background-color' },
+            { label: 'Border Color', slug: 'utilities/border-color' },
+          ],
+        },
+        {
+          label: 'Borders & Effects',
+          collapsed: true,
+          items: [
+            { label: 'Border Width', slug: 'utilities/border-width' },
+            { label: 'Border Radius', slug: 'utilities/border-radius' },
+            { label: 'Box Shadow', slug: 'utilities/box-shadow' },
+            { label: 'Opacity', slug: 'utilities/opacity' },
+            { label: 'Transitions', slug: 'utilities/transitions' },
+          ],
+        },
+        {
+          label: 'Layout Mixins',
+          collapsed: true,
+          items: [
+            { label: 'Grid', slug: 'mixins/grid' },
+            { label: 'Flexbox', slug: 'mixins/flex' },
+            { label: 'Breakpoints', slug: 'mixins/breakpoints' },
+          ],
+        },
+        {
+          label: 'Reference',
+          collapsed: true,
+          items: [
+            { label: 'Functions', slug: 'reference/functions' },
+            { label: 'API Reference', slug: 'reference/api-reference' },
+            { label: 'Architecture', slug: 'reference/architecture' },
+            { label: 'Examples', slug: 'reference/examples' },
+            { label: 'Roadmap', slug: 'reference/roadmap' },
           ],
         },
       ],
@@ -41,7 +127,7 @@ export default defineConfig({
         // Selector de versiones en la cabecera del sitio de docs.
         SiteTitle: './src/components/VersionTitle.astro',
       },
-      customCss: ['./src/styles/custom.css'],
+      customCss: ['./src/styles/custom.css', './src/styles/framework.scss'],
     }),
   ],
 });

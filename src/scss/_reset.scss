@@ -16,6 +16,7 @@
   --border-default: 0 solid currentColor;
   --color-scheme: light dark;
   --placeholder-color: #9ca3af;
+  --root-font-size: 62.5%;
 }
 
 *,
@@ -31,6 +32,7 @@
 }
 
 html {
+  font-size: var(--root-font-size);
   -webkit-text-size-adjust: var(--text-size-adjust);
   text-size-adjust: var(--text-size-adjust);
   min-height: var(--min-h-screen);
