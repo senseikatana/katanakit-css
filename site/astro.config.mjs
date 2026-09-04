@@ -6,13 +6,22 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
 export default defineConfig({
-  site: 'https://senseikatana.github.io/katanakit-css/',
-  base: '/katanakit-css/',
   integrations: [
     starlight({
       title: 'KatanaKIT CSS',
       description:
         'A lightweight, modular SCSS mini-framework: design tokens, utility classes and layout mixins.',
+      defaultLocale: 'root',
+      locales: {
+        root: {
+          label: 'English',
+          lang: 'en',
+        },
+        es: {
+          label: 'Español',
+          lang: 'es',
+        },
+      },
       social: [
         {
           icon: 'github',
@@ -24,7 +33,7 @@ export default defineConfig({
         {
           label: 'Start Here',
           items: [
-            { label: 'Introduction', link: '/katanakit-css/' },
+            { label: 'Introduction', link: '/' },
             { label: 'Installation', slug: 'getting-started' },
           ],
         },
@@ -124,8 +133,8 @@ export default defineConfig({
         },
       ],
       components: {
-        // Selector de versiones en la cabecera del sitio de docs.
         SiteTitle: './src/components/VersionTitle.astro',
+        ThemeSelect: './src/components/ThemeDropdown.astro',
       },
       customCss: ['./src/styles/custom.css', './src/styles/framework.scss'],
     }),

@@ -7,11 +7,11 @@ description: Install katanakit-css and write your first styles.
 
 This guide walks you through installing `katanakit-css` and writing your first
 styles. It assumes basic familiarity with Sass module syntax (`@use`). If you
-are new to the framework, skim the [Introduction](/katanakit-css/) first —
+are new to the framework, skim the [Introduction](/) first —
 this guide goes a bit deeper on concrete setup options.
 
 The full, code-verified API surface lives in the
-[API Reference](/katanakit-css/api-reference/).
+[API Reference](/reference/api-reference/).
 
 ---
 
@@ -53,7 +53,7 @@ no legacy `@import` anywhere.
 Link it or import it:
 
 ```html
-<link rel="stylesheet" href="/node_modules/katanakit-css/dist/css/katanakit.css" />
+<link rel="stylesheet" href="/node_modules/dist/css/katanakit.css" />
 ```
 
 Or import it from your JavaScript entry in a bundler-based app:
@@ -199,10 +199,10 @@ Functions give you the raw colors at build time: `v.get-color("info", 300)`,
 
 ## Where to go next
 
-- [API Reference](/katanakit-css/api-reference/) — complete list of
+- [API Reference](/reference/api-reference/) — complete list of
   functions, mixins and maps per module.
-- [Architecture](/katanakit-css/architecture/) — module graph and build flow.
-- [Roadmap](/katanakit-css/roadmap/) — shipped and planned work.
+- [Architecture](/reference/architecture/) — module graph and build flow.
+- [Roadmap](/reference/roadmap/) — shipped and planned work.
 - [Demo](https://github.com/senseikatana/katanakit-css#run-the-demo-locally) —
   run `yarn dev` and inspect `index.html` + `demo/main.js` for a working
   example of everything above.

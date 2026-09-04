@@ -60,7 +60,7 @@ pins it:
 <nav class="sticky" style="top: 0">…</nav>
 ```
 
-Use the `z-sticky` layer from [Z-Index](/katanakit-css/utilities/z-index/)
+Use the `z-sticky` layer from [Z-Index](/utilities/z-index/)
 when the sticky element needs to sit above other content.
 
 ## Customizing

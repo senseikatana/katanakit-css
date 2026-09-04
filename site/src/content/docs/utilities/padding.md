@@ -53,7 +53,7 @@ Every value of `$spacing-map` is emitted for the seven prefixes: `p-*`
 | `80` → `20rem` | `.p-80` | `.px-80` | `.py-80` | `.pt-80` | `.pr-80` | `.pb-80` | `.pl-80` |
 | `96` → `24rem` | `.p-96` | `.px-96` | `.py-96` | `.pt-96` | `.pr-96` | `.pb-96` | `.pl-96` |
 
-See the [Design Tokens](/katanakit-css/core/tokens/) page for the complete
+See the [Design Tokens](/core/tokens/) page for the complete
 spacing scale definition.
 
 ## Basic usage

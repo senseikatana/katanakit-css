@@ -16,8 +16,8 @@ Legend: `[x]` done · `[ ]` planned (no commitment to an order).
 ## Current status
 
 The framework is at **0.1.0 (unreleased)**. The shipped scope is documented in
-[CHANGELOG.md](https://github.com/senseikatana/katanakit-css/blob/main/CHANGELOG.md); the API in the
-[API Reference](/katanakit-css/api-reference/).
+[CHANGELOG.md](https://github.com/senseikatana/blob/main/CHANGELOG.md); the API in the
+[API Reference](/reference/api-reference/).
 
 ## Shipped for 0.1.0
 
@@ -108,4 +108,4 @@ The framework is at **0.1.0 (unreleased)**. The shipped scope is documented in
 
 If you want to tackle a planned item, open an issue first so the approach is
 agreed (some items touch breaking API decisions). See
-[CONTRIBUTING.md](https://github.com/senseikatana/katanakit-css/blob/main/CONTRIBUTING.md) for the development workflow.
+[CONTRIBUTING.md](https://github.com/senseikatana/blob/main/CONTRIBUTING.md) for the development workflow.

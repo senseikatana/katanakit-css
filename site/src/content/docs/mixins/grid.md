@@ -143,5 +143,5 @@ A complete dashboard layout combining containers, spans and breakpoints:
 }
 ```
 
-See [Examples](/katanakit-css/reference/examples/) for the full
+See [Examples](/reference/examples/) for the full
 `grid-dashboard.scss` source.

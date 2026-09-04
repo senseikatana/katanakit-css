@@ -1,19 +1,19 @@
 ---
 title: Z-Index
-description: Utilities for controlling the stack order of an element.
+description: Utilidades para controlar el orden de apilamiento de un elemento.
 sidebar:
   order: 4
 ---
 
 # Z-Index
 
-Utilities for controlling the stack order of an element, generated from the
-`$z-layers-map`. Named layers (`dropdown` … `tooltip`) keep overlapping UI
-consistent across a project.
+Utilidades para controlar el orden de apilamiento de un elemento, generadas
+desde `$z-layers-map`. Las capas con nombre (`dropdown` ... `tooltip`)
+mantienen la consistencia de la UI superpuesta en todo el proyecto.
 
-## Quick reference
+## Referencia rapida
 
-| Class | Properties |
+| Clase | Propiedades |
 | --- | --- |
 | `.z-auto` | `z-index: auto;` |
 | `.z-0` | `z-index: 0;` |
@@ -29,10 +29,10 @@ consistent across a project.
 | `.z-popover` | `z-index: 1050;` |
 | `.z-tooltip` | `z-index: 1060;` |
 
-## Basic usage
+## Uso basico
 
-`z-index` only applies to positioned elements — pair it with the
-[Position](/utilities/position/) utilities:
+`z-index` solo se aplica a elementos posicionados; combinado con las
+utilidades de [Posicion](/es/utilities/position/):
 
 <div class="kk-demo">
   <div class="relative p-4 rounded-md" style="height: 7rem; width: 16rem">
@@ -50,21 +50,22 @@ consistent across a project.
 </div>
 ```
 
-## Using named layers
+## Usar capas con nombre
 
-Named layers map to the semantic roles in the `$z-layers-map` — use them so
-modals always sit above dropdowns, tooltips above popovers, and so on:
+Las capas con nombre mapean a los roles semanticos en `$z-layers-map`; usalas
+para que los modales siempre esten por encima de los dropdowns, los tooltips
+por encima de los popovers, y asi sucesivamente:
 
 ```html
-<header class="sticky z-sticky">…</header>
-<nav class="absolute z-dropdown">…</nav>
-<div class="fixed z-modal">…</div>
-<div class="absolute z-tooltip">…</div>
+<header class="sticky z-sticky">...</header>
+<nav class="absolute z-dropdown">...</nav>
+<div class="fixed z-modal">...</div>
+<div class="absolute z-tooltip">...</div>
 ```
 
-## Customizing
+## Personalizar
 
-Override the layer map in the `mixins` module:
+Sobreescribe el mapa de capas en el modulo `mixins`:
 
 ```scss
 @use "katanakit-css/src/scss/mixins" as m with (

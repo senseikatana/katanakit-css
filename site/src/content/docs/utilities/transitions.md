@@ -14,7 +14,7 @@ Utilities for controlling the `transition-duration` and
 > These utilities set the duration and easing **only**. The framework does
 > not emit a `.transition` class — declare `transition-property` yourself
 > (e.g. `transition: color`), or use the `transition*` utilities inside
-> [`@apply`](/katanakit-css/core/apply/).
+> [`@apply`](/core/apply/).
 
 ## Quick reference
 

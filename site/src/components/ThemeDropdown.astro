@@ -1,0 +1,65 @@
+---
+// ============================================================
+//  ThemeDropdown.astro — override del ThemeSelect de Starlight.
+//  Dropdown con opciones Light / Dark / System que persiste
+//  la preferencia en localStorage y alterna data-theme en <html>.
+// ============================================================
+---
+<select
+  class="kk-theme-select"
+  aria-label="Color theme"
+  id="kk-theme-select"
+>
+  <option value="auto">🖥 System</option>
+  <option value="light">☀ Light</option>
+  <option value="dark">🌙 Dark</option>
+</select>
+
+<script>
+  const STORAGE_KEY = 'kk-theme';
+  const select = document.getElementById('kk-theme-select') as HTMLSelectElement | null;
+  const root = document.documentElement;
+
+  function getStored(): string {
+    try { return localStorage.getItem(STORAGE_KEY) ?? 'auto'; }
+    catch { return 'auto'; }
+  }
+
+  function applyTheme(choice: string): void {
+    if (choice === 'light' || choice === 'dark') {
+      root.setAttribute('data-theme', choice);
+    } else {
+      // System: detecta la preferencia del SO.
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      root.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    }
+  }
+
+  // Inicializar al cargar.
+  if (select) {
+    select.value = getStored();
+    applyTheme(select.value);
+
+    select.addEventListener('change', () => {
+      localStorage.setItem(STORAGE_KEY, select.value);
+      applyTheme(select.value);
+    });
+
+    // Reaccionar a cambios del SO cuando el usuario tiene "System".
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      if (select.value === 'auto') applyTheme('auto');
+    });
+  }
+</script>
+
+<style>
+  .kk-theme-select {
+    font-size: 0.8125rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.375rem;
+    background: var(--sl-color-bg);
+    color: var(--sl-color-text);
+    cursor: pointer;
+  }
+</style>

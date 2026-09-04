@@ -144,8 +144,8 @@ mq.addEventListener("change", apply);
 
 ## Related pages
 
-- [Colors](/katanakit-css/core/colors/) — palettes and `generate-css-vars()`.
-- [Breakpoints](/katanakit-css/core/breakpoints/) — the `m.dark-mode` feature query.
-- [Text Color](/katanakit-css/utilities/text-color/) and
-  [Background Color](/katanakit-css/utilities/background-color/) — the
+- [Colors](/core/colors/) — palettes and `generate-css-vars()`.
+- [Breakpoints](/core/breakpoints/) — the `m.dark-mode` feature query.
+- [Text Color](/utilities/text-color/) and
+  [Background Color](/utilities/background-color/) — the
   color utility classes.

@@ -106,7 +106,7 @@ A typical responsive card grid, mobile-first then constrained at the top end:
 }
 ```
 
-See the [Breakpoints mixin reference](/katanakit-css/mixins/breakpoints/) for
+See the [Breakpoints mixin reference](/mixins/breakpoints/) for
 the complete technical reference of the generic mixin.
 
 ## Feature queries
@@ -141,7 +141,7 @@ Beyond widths, the module ships media-feature shortcuts:
 ```
 
 `m.dark-mode` and `m.light-mode` follow the **system** preference. For the
-class-based theme, see [Dark Mode](/katanakit-css/core/dark-mode/).
+class-based theme, see [Dark Mode](/core/dark-mode/).
 
 ## Overriding the tiers
 

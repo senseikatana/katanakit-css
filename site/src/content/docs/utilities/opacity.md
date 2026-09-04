@@ -61,7 +61,7 @@ takes space and receives pointer events.
 ## Combining with transitions
 
 Opacity pairs with the
-[Transitions](/katanakit-css/utilities/transitions/) utilities for fade
+[Transitions](/utilities/transitions/) utilities for fade
 effects:
 
 ```html
@@ -75,8 +75,8 @@ effects:
 
 > Note: there is no `.hover-opacity-*` variant in this framework — the
 > hover color variants are `.hover-text-*` and `.hover-bg-*` (see
-> [Text Color](/katanakit-css/utilities/text-color/) and
-> [Background Color](/katanakit-css/utilities/background-color/)).
+> [Text Color](/utilities/text-color/) and
+> [Background Color](/utilities/background-color/)).
 
 ## Customizing
 

@@ -1,27 +1,27 @@
 ---
-title: Flex Direction
-description: Utilities for controlling the direction of flex items.
+title: Direccion flex
+description: Utilidades para controlar la direccion de los elementos flex.
 sidebar:
   order: 1
 ---
 
-# Flex Direction
+# Direccion flex
 
-Utilities for controlling the direction of flex items. Requires a flex
-container (`.flex` or `.inline-flex` — see [Display](/utilities/display/)).
+Utilidades para controlar la direccion de los elementos flex. Requiere un
+contenedor flex (`.flex` o `.inline-flex`; consulta [Display](/es/utilities/display/)).
 
-## Quick reference
+## Referencia rapida
 
-| Class | Properties |
+| Clase | Propiedades |
 | --- | --- |
 | `.flex-row` | `flex-direction: row;` |
 | `.flex-row-reverse` | `flex-direction: row-reverse;` |
 | `.flex-col` | `flex-direction: column;` |
 | `.flex-col-reverse` | `flex-direction: column-reverse;` |
 
-## Basic usage
+## Uso basico
 
-Lay items out in a row (the default) or a column:
+Organiza los elementos en una fila (por defecto) o una columna:
 
 <div class="kk-demo">
   <div class="flex flex-row gap-2">
@@ -37,14 +37,14 @@ Lay items out in a row (the default) or a column:
 </div>
 
 ```html
-<div class="flex flex-row gap-2">…</div>
-<div class="flex flex-col gap-2">…</div>
+<div class="flex flex-row gap-2">...</div>
+<div class="flex flex-col gap-2">...</div>
 ```
 
-## Reversing the direction
+## Invertir la direccion
 
-`flex-row-reverse` and `flex-col-reverse` keep the same layout axis but
-flip the visual order of the items:
+`flex-row-reverse` y `flex-col-reverse` mantienen el mismo eje de layout
+pero invierten el orden visual de los elementos:
 
 <div class="kk-demo">
   <div class="flex flex-row-reverse gap-2">
@@ -55,13 +55,13 @@ flip the visual order of the items:
 </div>
 
 ```html
-<div class="flex flex-row-reverse gap-2">…</div>
+<div class="flex flex-row-reverse gap-2">...</div>
 ```
 
-## Customizing
+## Personalizar
 
-Direction classes are generated from the `$flex-direction-map` in the
-`mixins` module:
+Las clases de direccion se generan desde `$flex-direction-map` en el modulo
+`mixins`:
 
 ```scss
 @use "katanakit-css/src/scss/mixins" as m with (

@@ -70,5 +70,5 @@ Flexbox layout mixins in the `mixins` module.
 }
 ```
 
-See the [Flexbox utilities](/katanakit-css/utilities/flex-direction/) for
+See the [Flexbox utilities](/utilities/flex-direction/) for
 the class-based equivalents (`.flex`, `.items-*`, `.justify-*`, `.gap-*`).

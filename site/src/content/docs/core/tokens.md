@@ -153,6 +153,6 @@ that derive from the configured maps all pick up the new values.
 
 ## Related pages
 
-- [Colors](/katanakit-css/core/colors/) — the color palettes and their accessors.
-- [Breakpoints](/katanakit-css/core/breakpoints/) — responsive breakpoint tiers.
-- [Functions](/katanakit-css/reference/functions/) — pure helper functions.
+- [Colors](/core/colors/) — the color palettes and their accessors.
+- [Breakpoints](/core/breakpoints/) — responsive breakpoint tiers.
+- [Functions](/reference/functions/) — pure helper functions.

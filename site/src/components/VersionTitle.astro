@@ -4,8 +4,8 @@
 //  añade un selector de versiones de la documentación.
 // ============================================================
 const versions = [
-  { path: '/katanakit-css/', label: 'latest' },
-  { path: '/katanakit-css/versions/0-1-0/', label: 'v0.1.0' },
+  { path: '/', label: 'latest' },
+  { path: '/versions/0-1-0/', label: 'v0.1.0' },
 ];
 // Comprueba primero las rutas más específicas (versiones) para no
 // marcar "latest" en páginas versionadas (prefijo común).
@@ -15,7 +15,7 @@ const current =
     .find((v) => Astro.url.pathname.startsWith(v.path)) ?? versions[0];
 ---
 <div class="kk-version-title">
-  <a href="/katanakit-css/" class="kk-version-title__link">KatanaKIT CSS</a>
+  <a href="/" class="kk-version-title__link">KatanaKIT CSS</a>
   <select
     class="kk-version-select"
     aria-label="Documentation version"

@@ -46,7 +46,7 @@ Clip content that exceeds a fixed height or width:
 
 ## Combining with sizing utilities
 
-`overflow-*` pairs with the [Width & Height](/katanakit-css/utilities/sizing/)
+`overflow-*` pairs with the [Width & Height](/utilities/sizing/)
 utilities to create scrollable regions:
 
 ```html

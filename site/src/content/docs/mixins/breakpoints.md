@@ -9,7 +9,7 @@ sidebar:
 
 Technical reference of the responsive mixin engine in the `mixins` module.
 For a conceptual overview and the feature queries, see
-[Breakpoints](/katanakit-css/core/breakpoints/).
+[Breakpoints](/core/breakpoints/).
 
 ```scss
 @use "katanakit-css/src/scss/mixins" as m;

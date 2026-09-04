@@ -56,7 +56,7 @@ values through the accessors.
 The key idea: **configure once, before first use**. Because a Sass module can
 only be configured once per compilation, the `with` clause must come before
 any other module loads `variables`. See
-[Design Tokens](/katanakit-css/core/tokens/) for the full token reference.
+[Design Tokens](/core/tokens/) for the full token reference.
 
 ## 2. Grid dashboard layout
 
@@ -118,7 +118,7 @@ mixins: a 12-column container, explicit spans, a mobile-first collapse via
 ```
 
 The sidebar and content share the same 12-column grid; below `md` everything
-falls back to a single column. See the [Grid mixins](/katanakit-css/mixins/grid/)
+falls back to a single column. See the [Grid mixins](/mixins/grid/)
 for every mixin used here.
 
 ## 3. Dark theme
@@ -153,13 +153,13 @@ Then toggle the attribute from markup or JavaScript:
 <html data-theme="dark">…</html>
 ```
 
-Read [Dark Mode](/katanakit-css/core/dark-mode/) for the inversion table and
+Read [Dark Mode](/core/dark-mode/) for the inversion table and
 JavaScript snippets.
 
 ## 4. Button and card components
 
 `examples/components/button-card.scss` — composite components built with the
-[`@apply`](/katanakit-css/core/apply/) system.
+[`@apply`](/core/apply/) system.
 
 ```scss
 // ============================================================

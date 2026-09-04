@@ -146,5 +146,5 @@ Applying an unregistered name fails loudly at compile time:
 
 ## Related pages
 
-- [Getting Started](/katanakit-css/getting-started/) — composing sheets with modules.
-- [Examples](/katanakit-css/reference/examples/) — the button/card example in full.
+- [Getting Started](/getting-started/) — composing sheets with modules.
+- [Examples](/reference/examples/) — the button/card example in full.

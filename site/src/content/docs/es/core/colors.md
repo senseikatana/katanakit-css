@@ -1,24 +1,25 @@
 ---
-title: Colors
-description: Color palettes, accessor functions and CSS variable generation.
+title: Colores
+description: Paletas de color, funciones de acceso y generacion de variables CSS.
 sidebar:
   order: 2
 ---
 
-# Colors
+# Colores
 
-KatanaKIT CSS ships **6 palettes with 7 shades each** (`100` lightest → `700`
-darkest) plus four special colors. Everything lives in the `variables` module
-and is emitted as utility classes, CSS custom properties and hover variants.
+KatanaKIT CSS incluye **6 paletas con 7 tonos cada una** (`100` mas claro ->
+`700` mas oscuro) mas cuatro colores especiales. Todo vive en el modulo
+`variables` y se emite como clases de utilidad, propiedades personalizadas
+CSS y variantes hover.
 
 ```scss
 @use "katanakit-css/src/scss/variables" as v;
 ```
 
-## Palettes
+## Paletas
 
-Each palette follows the same lightness ramp: `100`–`300` are background
-tones, `400` is the vivid brand tone, `500`–`700` are text tones.
+Cada paleta sigue la misma rampa de luminosidad: `100`-`300` son tonos de
+fondo, `400` es el tono de marca vivid, `500`-`700` son tonos de texto.
 
 ### Neutral
 
@@ -92,7 +93,7 @@ tones, `400` is the vivid brand tone, `500`–`700` are text tones.
   <div class="kk-swatch bg-success-700">700</div>
 </div>
 
-### Special colors
+### Colores especiales
 
 <div class="kk-swatches">
   <div class="kk-swatch bg-black">black</div>
@@ -100,14 +101,14 @@ tones, `400` is the vivid brand tone, `500`–`700` are text tones.
   <div class="kk-swatch bg-transparent kk-swatch--light">transparent</div>
 </div>
 
-`current` is also a special color (`currentColor`), but it has no visible
-swatch of its own — it resolves to the element's `color` value.
+`current` tambien es un color especial (`currentColor`), pero no tiene una
+muestra visible propia; se resuelve al valor `color` del elemento.
 
-## Tone values
+## Valores de tono
 
-Stored as `hsl(hue, saturation%, lightness%)`:
+Almacenados como `hsl(tono, saturacion%, luminosidad%)`:
 
-| Palette | 100 | 200 | 300 | 400 | 500 | 600 | 700 |
+| Paleta | 100 | 200 | 300 | 400 | 500 | 600 | 700 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `neutral` | 0 0% 93% | 0 0% 86% | 0 0% 71% | 0 0% 50% | 0 0% 35% | 0 0% 24% | 0 0% 12% |
 | `purple` | 269 60% 93% | 269 70% 86% | 269 70% 71% | 269 66% 50% | 269 66% 35% | 269 60% 24% | 269 50% 12% |
@@ -116,31 +117,32 @@ Stored as `hsl(hue, saturation%, lightness%)`:
 | `danger` | 3 95% 93% | 3 95% 86% | 3 95% 71% | 3 95% 50% | 3 95% 35% | 3 95% 24% | 3 95% 12% |
 | `success` | 147 95% 93% | 147 95% 86% | 147 95% 71% | 147 95% 50% | 147 95% 35% | 147 95% 24% | 147 95% 12% |
 
-Special colors: `black` `hsl(0, 0%, 3%)` · `white` `hsl(0, 0%, 98%)` ·
-`transparent` `transparent` · `current` `currentColor`.
+Colores especiales: `black` `hsl(0, 0%, 3%)` . `white` `hsl(0, 0%, 98%)` .
+`transparent` `transparent` . `current` `currentColor`.
 
-## Accessor functions
+## Funciones de acceso
 
-| Signature | Returns |
+| Firma | Devuelve |
 | --- | --- |
-| `v.get-color($name, $shade: 300, $alpha: 1)` | A palette shade (or a special color when `$name` is special). Applies alpha when `$alpha != 1`. |
-| `v.get($name, $alpha: 1)` | Shorthand: `get-color($name, 500, $alpha)`. |
-| `v.alpha($name, $shade: 500, $alpha: 0.5)` | Shorthand for transparent variants. |
+| `v.get-color($name, $shade: 300, $alpha: 1)` | Un tono de paleta (o un color especial cuando `$name` es especial). Aplica alfa cuando `$alpha != 1`. |
+| `v.get($name, $alpha: 1)` | Abreviatura: `get-color($name, 500, $alpha)`. |
+| `v.alpha($name, $shade: 500, $alpha: 0.5)` | Abreviatura para variantes transparentes. |
 
 ```scss
 @use "katanakit-css/src/scss/variables" as v;
 
 color: v.get-color("neutral", 500);  // hsl(0, 0%, 35%)
-color: v.get("info");                // shade 500: hsl(215, 95%, 35%)
+color: v.get("info");                // tono 500: hsl(215, 95%, 35%)
 border: 1px solid v.alpha("warning", 400, 0.25);
 background: v.alpha("purple", 100, 0.4);
 ```
 
-Invalid palette or shade names raise a compile-time `@error`.
+Nombres de paleta o tono invalidos lanzan un `@error` en tiempo de compilacion.
 
-## Generating CSS variables
+## Generar variables CSS
 
-`generate-css-vars()` emits one custom property per shade plus the specials:
+`generate-css-vars()` emite una propiedad personalizada por tono mas los
+especiales:
 
 ```scss
 @use "katanakit-css/src/scss/variables" as v;
@@ -151,7 +153,7 @@ Invalid palette or shade names raise a compile-time `@error`.
 ```css
 :root {
   --neutral-100: hsl(0, 0%, 93%);
-  /* … every palette and shade … */
+  /* ... cada paleta y tono ... */
   --info-500: hsl(215, 95%, 35%);
   --black: hsl(0, 0%, 3%);
   --white: hsl(0, 0%, 98%);
@@ -161,30 +163,30 @@ Invalid palette or shade names raise a compile-time `@error`.
 ```
 
 ```scss
-// Only the info palette, no specials:
+// Solo la paleta info, sin especiales:
 @include v.generate-css-vars($palettes: "info", $include-special: false);
 
-// A custom root selector:
+// Un selector raiz personalizado:
 @include v.generate-css-vars($root: ".theme-brand");
 ```
 
-`$palettes` accepts `null` (all), a name, a list of names, or a map emitted
-as-is — the mechanism the [dark theme](/core/dark-mode/) uses to
-publish inverted palettes.
+`$palettes` acepta `null` (todas), un nombre, una lista de nombres, o un mapa
+emitido tal cual; este es el mecanismo que usa el
+[tema oscuro](/es/core/dark-mode/) para publicar paletas invertidas.
 
-## Utility classes
+## Clases de utilidad
 
-The color mixins generate the classes you use in markup:
+Los mixins de color generan las clases que usas en el markup:
 
-| Mixin | Classes |
+| Mixin | Clases |
 | --- | --- |
-| `v.text-utilities()` | `.text-{palette}-{100…700}` + `.text-black` `.text-white` `.text-transparent` `.text-current` |
-| `v.bg-utilities()` | `.bg-{palette}-{100…700}` + `.bg-black` `.bg-white` `.bg-transparent` `.bg-current` |
-| `v.border-utilities()` | `.border-{palette}-{100…700}` + the four specials |
-| `v.hover-utilities()` | `.hover-text-*:hover` and `.hover-bg-*:hover` |
-| `v.all-utilities()` | All four mixins at once (called by `main.scss`). |
+| `v.text-utilities()` | `.text-{palette}-{100...700}` + `.text-black` `.text-white` `.text-transparent` `.text-current` |
+| `v.bg-utilities()` | `.bg-{palette}-{100...700}` + `.bg-black` `.bg-white` `.bg-transparent` `.bg-current` |
+| `v.border-utilities()` | `.border-{palette}-{100...700}` + los cuatro especiales |
+| `v.hover-utilities()` | `.hover-text-*:hover` y `.hover-bg-*:hover` |
+| `v.all-utilities()` | Los cuatro mixins a la vez (llamado por `main.scss`). |
 
-See [Text Color](/utilities/text-color/),
-[Background Color](/utilities/background-color/) and
-[Border Color](/utilities/border-color/) for the complete
-class tables.
+Consulta [Color de texto](/es/utilities/text-color/),
+[Color de fondo](/es/utilities/background-color/) y
+[Color de borde](/es/utilities/border-color/) para las tablas completas
+de clases.

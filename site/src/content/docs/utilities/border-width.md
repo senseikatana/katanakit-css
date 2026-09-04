@@ -40,7 +40,7 @@ widths come from the `$border-width-map`.
 ```
 
 Widths are separate from colors: add a color from
-[Border Color](/katanakit-css/utilities/border-color/) or the default
+[Border Color](/utilities/border-color/) or the default
 (`currentColor`) applies.
 
 ## Customizing
