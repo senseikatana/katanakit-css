@@ -1,7 +1,8 @@
 // ============================================================
-//  RESET MODERNO
-//  Valores por defecto de las custom properties que usa el reset.
-//  Sobrescríbelas desde tu tema si lo necesitas.
+//  RESET / PREFLIGHT
+//  Normalización moderna al estilo Tailwind preflight.
+//  Valores por defecto de las custom properties que usa el
+//  reset. Sobrescríbelas desde tu tema si lo necesitas.
 // ============================================================
 :root {
   --m-reset: 0;
@@ -12,6 +13,9 @@
   --min-w-reset: auto;
   --text-size-adjust: 100%;
   --min-h-screen: 100vh;
+  --border-default: 0 solid currentColor;
+  --color-scheme: light dark;
+  --placeholder-color: #9ca3af;
 }
 
 *,
@@ -23,17 +27,21 @@
   background-repeat: var(--bg-repeat);
   background-position: var(--bg-position);
   min-width: var(--min-w-reset);
+  border: var(--border-default);
 }
 
 html {
   -webkit-text-size-adjust: var(--text-size-adjust);
   text-size-adjust: var(--text-size-adjust);
   min-height: var(--min-h-screen);
+  color-scheme: var(--color-scheme);
+  tab-size: 4;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  height: 100vh;
-  height: 100dvh;
   min-height: 100vh;
   min-height: 100dvh;
   font-family: system-ui, -apple-system, sans-serif;
@@ -42,20 +50,170 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+// --- Tipografía base ---
+hr {
+  height: 0;
+  color: inherit;
+  border-top-width: 1px;
+}
+
+abbr:where([title]) {
+  text-decoration: underline dotted;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+b, strong {
+  font-weight: bolder;
+}
+
+code, kbd, samp, pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 1em;
+}
+
+small {
+  font-size: 80%;
+}
+
+sub, sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub { bottom: -0.25em; }
+sup { top: -0.5em; }
+
+table {
+  text-indent: 0;
+  border-color: inherit;
+  border-collapse: collapse;
+}
+
+// --- Multimedia ---
 img,
 picture,
 video,
 canvas,
-svg {
+svg,
+iframe,
+embed,
+object {
   display: block;
   max-width: 100%;
+  vertical-align: middle;
 }
 
+// --- Formularios ---
 input,
 button,
 textarea,
-select {
+select,
+optgroup {
   font: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+button,
+select {
+  text-transform: none;
+}
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+  -webkit-appearance: button;
+  appearance: button;
+  background-color: transparent;
+  background-image: none;
+}
+
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+:disabled {
+  cursor: default;
+}
+
+::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+progress {
+  vertical-align: baseline;
+}
+
+summary {
+  display: list-item;
+  cursor: pointer;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+legend {
+  padding: 0;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input::placeholder,
+textarea::placeholder {
+  opacity: 1;
+  color: var(--placeholder-color);
+}
+
+::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit;
+}
+
+// --- Listas y enlaces ---
+ol,
+ul,
+menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+}
+
+// --- Utilidades de preflight ---
+[hidden] {
+  display: none;
+}
+
+blockquote,
+dl,
+dd,
+figure,
+pre {
+  margin: 0;
 }
 
 p,
@@ -66,14 +224,4 @@ h4,
 h5,
 h6 {
   overflow-wrap: break-word;
-}
-
-ul,
-ol {
-  list-style: none;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
 }

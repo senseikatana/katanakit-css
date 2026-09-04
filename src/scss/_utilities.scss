@@ -1,10 +1,13 @@
 // ============================================================
 //  _utilities.scss
 //  Utility class generation from design-token maps.
-//  Emits .p-*, .gap, .shadow, .rounded automatically on import.
-//  Provides opt-in generators for sizing, flex, effects and layout.
+//  Auto-emits spacing (padding + margin), .gap, .shadow,
+//  .rounded, text sizes and border widths on import.
+//  Provides opt-in generators for sizing, flex, effects and
+//  layout utilities.
 // ============================================================
 @use "mixins" as mx;
+@use "variables" as v;
 
 // ============================================================
 //  UTILITY MAPS (same source of truth as @apply registry)
@@ -19,32 +22,56 @@ $sizing-map: (
   "min": min-content, "max": max-content, "fit": fit-content
 ) !default;
 
-$spacing-map: (
-  "0": 0, "05": 0.125rem, "base": 1px, "1": 0.25rem, "1-5": 0.375rem,
-  "2": 0.5rem, "2-5": 0.625rem, "3": 0.75rem, "3-5": 0.875rem, "4": 1rem,
-  "5": 1.25rem, "6": 1.5rem, "7": 1.75rem, "8": 2rem, "9": 2.25rem,
-  "10": 2.5rem, "11": 2.75rem, "12": 3rem, "14": 3.5rem, "16": 4rem,
-  "20": 5rem, "24": 6rem, "28": 7rem, "32": 8rem, "36": 9rem, "40": 10rem,
-  "44": 11rem, "48": 12rem, "52": 13rem, "56": 14rem, "60": 15rem, "64": 16rem,
-  "72": 18rem, "80": 20rem, "96": 24rem
+$spacing-map: v.$spacing-map !default;
+
+$font-size-map: (
+  "xs": 0.75rem, "sm": 0.875rem, "base": 1rem, "lg": 1.125rem,
+  "xl": 1.25rem, "2xl": 1.5rem, "3xl": 1.875rem, "4xl": 2.25rem
 ) !default;
 
-$gap-sizes-map: (
-  "0": 0, "1": 0.25rem, "2": 0.5rem, "3": 0.75rem,
-  "4": 1rem, "5": 1.25rem, "6": 1.5rem, "8": 2rem
+$border-width-map: (
+  "0": 0, "2": 2px, "4": 4px, "8": 8px
 ) !default;
 
 // ============================================================
 //  AUTO-EMITTED CLASSES (active on import)
 // ============================================================
 
-// Spacing utilities: .p-{key}
-@include mx.utils-classes($spacing-map, padding, "p");
+// Spacing: padding + margin, all directions
+@each $key, $value in $spacing-map {
+  .p-#{$key}  { padding: $value; }
+  .px-#{$key} { padding-left: $value; padding-right: $value; }
+  .py-#{$key} { padding-top: $value; padding-bottom: $value; }
+  .pt-#{$key} { padding-top: $value; }
+  .pr-#{$key} { padding-right: $value; }
+  .pb-#{$key} { padding-bottom: $value; }
+  .pl-#{$key} { padding-left: $value; }
+  .m-#{$key}  { margin: $value; }
+  .mx-#{$key} { margin-left: $value; margin-right: $value; }
+  .my-#{$key} { margin-top: $value; margin-bottom: $value; }
+  .mt-#{$key} { margin-top: $value; }
+  .mr-#{$key} { margin-right: $value; }
+  .mb-#{$key} { margin-bottom: $value; }
+  .ml-#{$key} { margin-left: $value; }
+  .gap-#{$key}    { gap: $value; }
+  .gap-x-#{$key}  { column-gap: $value; }
+  .gap-y-#{$key}  { row-gap: $value; }
+}
 
 // Base effects
 .shadow  { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); }
 .rounded { border-radius: 0.25rem; }
 .gap     { gap: 1rem; }
+
+// Typography scale
+@include mx.utils-classes($font-size-map, font-size, "text");
+
+// Border widths
+@include mx.utils-classes($border-width-map, border-width, "border");
+.border {
+  border-width: 1px;
+  border-style: solid;
+}
 
 // ============================================================
 //  OPT-IN GENERATORS
@@ -61,16 +88,16 @@ $gap-sizes-map: (
   @content;
 }
 
-/// Flex: .flex-*, .items-*, .justify-*, .gap-*
+/// Flex: .flex-*, .items-*, .justify-*
+/// (las clases .gap-* ya se emiten desde $spacing-map)
 @mixin generate-flex-utilities(
   $direction: mx.$flex-direction-map, $wrap: mx.$flex-wrap-list,
-  $align: mx.$align-items-map, $justify: mx.$justify-content-map, $gap: $gap-sizes-map
+  $align: mx.$align-items-map, $justify: mx.$justify-content-map
 ) {
   @include mx.utils-classes($direction, flex-direction, "flex");
   @include mx.utils-classes($wrap, flex-wrap, "flex");
   @include mx.utils-classes($align, align-items, "items");
   @include mx.utils-classes($justify, justify-content, "justify");
-  @include mx.utils-classes($gap, gap, "gap");
 }
 
 /// Effects: .shadow-*, .rounded-*, .z-*, .duration-*, .ease-*, .opacity-*
