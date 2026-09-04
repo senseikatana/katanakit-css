@@ -10,28 +10,49 @@ bun.lockb
 !.env.example
 !.prettierrc
 !.eslintrc.json
+!.biomeignore
+!biome.json
+
+# Agentes de AI y herramientas de desarrollo
+.zcode/
+.claude/
+.cursor/
+.devin/
+.atl/
+.opencode/
+.prisma/
 
 # Compilaciones y logs
 dist/
+demo-dist/
 build/
+*.tgz
 *.log
 npm-debug.log*
 yarn-debug.log*
 pnpm-debug.log*
 bun-debug.log*
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Code coverage
+coverage/
+*.lcov
+
+# Caches
+.eslintcache
+.cache
+*.tsbuildinfo
 
 # Archivos de entorno
 .env
 .env.local
 .env.*.local
 
-# Cache
-.cache/
+# Framework caches
 .parcel-cache/
 .next/
 .nuxt/
 .output/
-coverage/
 
 # IDEs
 .vscode/

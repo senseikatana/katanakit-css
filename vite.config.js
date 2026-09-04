@@ -5,35 +5,52 @@ const PORT = process.env.PORT || 4321;
 
 export default defineConfig({
   root: '.',
+  // No hay carpeta public/: el CSS se compila desde SCSS vía el grafo de Vite.
+  publicDir: false,
   server: {
     port: PORT,
     open: false,
     host: true,
-    hmr: true,
-    watch: {
-      alwaysStat: true,
-      ignored: ['**/node_modules/**', '**/dist/**'],
-      atomic: true,
-    },
     cors: true,
-    allowedHosts: ['localhost'],
+    hmr: true,
   },
   build: {
-    outDir: 'dist',
+    // La demo va a demo-dist/ para no pisar dist/css/katanakit.css (artefacto npm).
+    outDir: 'demo-dist',
     emptyOutDir: true,
     rollupOptions: {
-      input: {
-        main: 'index.html',
-      },
+      input: 'index.html',
     },
   },
   plugins: [
-    process.env.NODE_ENV === 'production' &&
-      purgecss({
-        content: ['./**/*.html', './**/*.js', './**/*.ts'],
-        safelist: {
-          standard: [/^:root$/, /^html$/, /^body$/, /^\.container$/],
-        },
-      }),
+    // PurgeCSS solo en build (en dev el CSS debe ser completo para HMR).
+    purgecss({
+      content: ['./index.html', './demo/**/*.{js,ts}'],
+      defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
+      safelist: {
+        standard: [
+          /^sm:/,
+          /^md:/,
+          /^lg:/,
+          /^xl:/,
+          /^2xl:/,
+          /^3xl:/,
+          /^hover:/,
+          /^focus:/,
+          /^active:/,
+          /^disabled:/,
+          /^group-hover:/,
+          /^peer-checked:/,
+        ],
+        deep: [/^data-/],
+        greedy: [/^is-/, /^has-/],
+      },
+      keyframes: true,
+      fontFace: true,
+      // Conserva las custom properties de tokens (:root) aunque las clases
+      // utilicen valores literales en vez de var().
+      variables: false,
+      rejected: false,
+    }),
   ].filter(Boolean),
 });

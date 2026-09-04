@@ -1,25 +1,54 @@
 {
   "name": "katanakit-css",
   "version": "0.1.0",
+  "description": "KatanaKIT CSS — a lightweight, modular SCSS mini-framework: design tokens, utility classes and layout mixins (grid, flex, breakpoints) with a @apply-style system. Zero runtime overhead.",
+  "keywords": [
+    "scss",
+    "sass",
+    "css",
+    "framework",
+    "design-tokens",
+    "utility-classes",
+    "mixins",
+    "grid",
+    "flexbox",
+    "breakpoints",
+    "reset",
+    "purgecss",
+    "vite"
+  ],
+  "license": "MIT",
+  "author": "senseikatana - Sergio Jurado",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/senseikatana/katanakit-css.git"
+  },
+  "homepage": "https://github.com/senseikatana/katanakit-css#readme",
+  "bugs": {
+    "url": "https://github.com/senseikatana/katanakit-css/issues"
+  },
+  "files": [
+    "src/scss",
+    "dist/css",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "sass": "src/scss/main.scss",
+  "style": "dist/css/katanakit.css",
   "scripts": {
-    "build:css": "sass src/scss/main.scss:dist/css/main.css --no-source-map --style=compressed",
-    "build:css:dev": "sass src/scss/main.scss:dist/css/main.css --watch",
-    "build:purge": "postcss dist/css/main.css -o dist/css/main.min.css",
-    "build": "bun run build",
-    "dev": "bun run dev",
-    "test": "bun run test"
+    "dev": "vite",
+    "build": "npm run build:css && npm run build:demo",
+    "build:css": "sass src/scss/main.scss dist/css/katanakit.css --no-source-map --style=compressed",
+    "build:demo": "vite build",
+    "preview": "vite preview",
+    "test": "node --test \"test/**/*.test.mjs\""
   },
   "devDependencies": {
-    "@fullhuman/postcss-purgecss": "^8.0.0",
     "autoprefixer": "^10.5.4",
-    "concurrently": "^10.0.5",
-    "live-server": "^1.2.2",
     "postcss": "^8.5.26",
-    "postcss-cli": "^11.0.1",
-    "sass": "^1.103.0"
-  },
-  "author": "senseikatana - Sergio Jurado",
-  "description": "Proyecto katanakit-css",
-  "main": "index.js",
-  "license": "MIT"
+    "sass": "^1.103.0",
+    "vite": "^6",
+    "vite-plugin-purgecss": "^0.2.13"
+  }
 }
