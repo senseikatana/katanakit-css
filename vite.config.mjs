@@ -5,8 +5,8 @@ const PORT = process.env.PORT || 4321;
 
 export default defineConfig({
   root: '.',
-  // No hay carpeta public/: el CSS se compila desde SCSS vía el grafo de Vite.
-  publicDir: false,
+  // public/ sirve los CSS compilados por build:versions (public/versions/).
+  publicDir: 'public',
   server: {
     port: PORT,
     open: false,
