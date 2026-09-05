@@ -51,7 +51,6 @@
     "sync-versions": "bash scripts/sync-versions.sh"
   },
   "devDependencies": {
-    "@astrojs/starlight": "^0.42.0",
     "@tailwindcss/cli": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^26.4.1",
@@ -64,5 +63,10 @@
     "vite": "^8.2.2",
     "vite-plugin-purgecss": "^0.2.13",
     "vitest": "^5.0.0"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^8.0.0",
+    "@prosefly/astro-components": "^0.6.2",
+    "@prosefly/astro-theme-lotus": "^0.7.3"
   }
 }
