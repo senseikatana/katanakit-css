@@ -1,5 +1,12 @@
 [
   { "tag": "latest", "label": "latest", "path": "/" },
+  { "tag": "v0.5.1", "label": "v0.5.1", "path": "/versions/0-5-1/" },
+  { "tag": "v0.5.0", "label": "v0.5.0", "path": "/versions/0-5-0/" },
+  { "tag": "v0.4.7", "label": "v0.4.7", "path": "/versions/0-4-7/" },
+  { "tag": "v0.4.6", "label": "v0.4.6", "path": "/versions/0-4-6/" },
+  { "tag": "v0.4.5", "label": "v0.4.5", "path": "/versions/0-4-5/" },
+  { "tag": "v0.4.4", "label": "v0.4.4", "path": "/versions/0-4-4/" },
+  { "tag": "v0.4.3", "label": "v0.4.3", "path": "/versions/0-4-3/" },
   { "tag": "v0.4.2", "label": "v0.4.2", "path": "/versions/0-4-2/" },
   { "tag": "v0.4.1", "label": "v0.4.1", "path": "/versions/0-4-1/" },
   { "tag": "v0.4.0", "label": "v0.4.0", "path": "/versions/0-4-0/" },
