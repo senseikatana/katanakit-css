@@ -24,7 +24,8 @@ bun.lockb
 .prisma/
 
 # Compilaciones y logs
-dist/
+dist/*
+!dist/css/
 demo-dist/
 build/
 *.tgz
