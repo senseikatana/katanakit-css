@@ -15,7 +15,7 @@ mkdir -p "$(dirname "$OUT")"
 
 # Compile main.scss (full framework) without source map.
 # The reset is included so the framework classes work standalone.
-sass "$ROOT/src/scss/main.scss" "$OUT" --no-source-map --style=compressed
+npx sass "$ROOT/src/scss/main.scss" "$OUT" --no-source-map --style=compressed
 
 SIZE=$(wc -c < "$OUT")
 echo "✓ framework.css → $OUT ($SIZE bytes)"
