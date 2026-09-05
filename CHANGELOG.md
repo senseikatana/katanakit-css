@@ -38,6 +38,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   only through the `@apply` registry, are now also generated as CSS classes
   by `_utilities.scss` (see Added).
 
+## [0.4.3] - 2026-09-05
+
+### Added
+
+- **Lotus theme migration** — migrated documentation from Starlight to
+  `@prosefly/astro-theme-lotus` (Astro 7 + Tailwind v4) for improved
+  design and functionality.
+- **DOCX export script** — added script to export documentation to DOCX
+  format with updated table of contents.
+- **GitHub Pages deployment** — automated deployment to gh-pages branch
+  for GitHub Pages hosting at `https://senseikatana.github.io/katanakit-css/`.
+
+### Changed
+
+- **Dependencies** — updated to Astro 7, Tailwind CSS v4, and latest
+  versions of all dependencies.
+- **Build configuration** — optimized build process with separate output
+  directory to avoid permission conflicts.
+
+### Fixed
+
+- **CI configuration** — removed old Starlight `astro.config.mjs` that
+  was causing CI errors during deployment.
+- **Starlight components** — removed remaining Starlight components that
+  were incompatible with the new Lotus theme.
+
+### Removed
+
+- **Starlight theme** — completely removed Starlight theme and all
+  related components in favor of Lotus theme.
+
 ## [0.1.0] - Unreleased
 
 Initial release of `katanakit-css` — a lightweight, modular SCSS
