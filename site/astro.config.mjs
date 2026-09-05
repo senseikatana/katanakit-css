@@ -1,11 +1,15 @@
 // ============================================================
-//  site/astro.config.mjs — Sitio de documentación KatanaKIT CSS
-//  (Astro + Starlight), estilo tailwindcss.com.
+//  site/astro.config.mjs — KatanaKIT CSS Documentation Site
+//  (Astro + Starlight + Tailwind CSS v4)
 // ============================================================
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
+  vite: {
+    plugins: [tailwindcss()],
+  },
   integrations: [
     starlight({
       title: 'KatanaKIT CSS',
@@ -137,7 +141,7 @@ export default defineConfig({
           tag: 'link',
           attrs: {
             rel: 'stylesheet',
-            href: '/framework.css',
+            href: '/framework-docs.css',
           },
         },
       ],
@@ -145,7 +149,10 @@ export default defineConfig({
         SiteTitle: './src/components/VersionTitle.astro',
         ThemeSelect: './src/components/ThemeDropdown.astro',
       },
-      customCss: ['./src/styles/custom.css'],
+      customCss: [
+        './src/styles/tailwind.css',
+        './src/styles/custom.css',
+      ],
     }),
   ],
 });

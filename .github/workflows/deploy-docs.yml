@@ -1,38 +1,35 @@
 # ============================================================
-#  deploy-docs.yml — Deploy documentation to GitHub Pages
+#  deploy-docs.yml — Build docs site and deploy to docs branch
 #
-#  Triggers:
-#    - Push to main  → builds and deploys latest docs
-#    - Push tag v*   → builds docs + snapshots under /versions/<tag>/
-#    - Manual dispatch
+#  On push to main:
+#    1. Builds CSS artifacts (framework + docs)
+#    2. Syncs versions.json from git tags
+#    3. Builds Astro docs site (with Tailwind CSS v4)
+#    4. Force-pushes the built output to the 'docs' branch
 #
-#  The versioned snapshot is a frozen copy of the docs at the
-#  moment of the release. It never changes when main is updated.
+#  GitHub Pages serves from the 'docs' branch.
 # ============================================================
 name: Deploy Docs
 
 on:
   push:
     branches: [main]
-    tags: ['v*']
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: pages
+  group: docs-deploy
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # needed for git tag list
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -42,45 +39,22 @@ jobs:
       - name: Install dependencies
         run: corepack enable && yarn install --frozen-lockfile
 
-      - name: Build CSS artifact
+      - name: Build CSS artifact (npm)
         run: yarn build:css
 
-      - name: Build framework CSS for docs site
-        run: bash scripts/build-framework-css.sh
+      - name: Build docs CSS (utilities only, no reset)
+        run: bash scripts/build-docs-css.sh
 
       - name: Sync versions.json from git tags
         run: bash scripts/sync-versions.sh
 
-      - name: Build documentation site
+      - name: Build Astro docs site (with Tailwind CSS)
         run: npx astro build --root site
 
-      # When pushing a tag, copy the build as a frozen version snapshot.
-      - name: Snapshot versioned docs
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: |
-          TAG="${GITHUB_REF#refs/tags/v}"
-          SAFE=$(echo "$TAG" | tr '.' '-')
-          DEST="site/dist/versions/$SAFE"
-          mkdir -p "$DEST"
-          # Copy the built site into the versioned directory.
-          # Exclude the versions/ dir itself to avoid recursion.
-          for item in index.html getting-started core utilities mixins reference es _astro pagefind favicon.svg framework.css; do
-            [ -e "site/dist/$item" ] && cp -r "site/dist/$item" "$DEST/"
-          done
-          echo "✓ Snapshot saved to $DEST"
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to docs branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: site/dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: docs
+          publish_dir: ./site/dist
+          force_orphan: true

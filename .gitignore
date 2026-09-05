@@ -70,7 +70,7 @@ Thumbs.db
 public/versions/*.css
 
 # Framework CSS compilado para el sitio de docs (artefacto de build)
-site/public/framework.css
+site/public/framework-docs.css
 
 # Keep folder placeholders
 !.gitkeep
