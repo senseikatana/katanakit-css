@@ -302,7 +302,7 @@ Generate custom properties and/or utility classes with the color mixins:
 Color utilities can be filtered by palette and specials toggled off, e.g.
 `@include v.all-utilities("info", false)` or
 `@include v.text-utilities((neutral, success))`. See
-[docs/API-Reference.md](docs/API-Reference.md#colors-as-v) for the full
+[the API reference](docs/docs/reference/api-reference.mdx#variables-as-v) for the full
 signatures.
 
 ---
@@ -601,10 +601,9 @@ katanakit-css/
 
 ## Documentation
 
-- [Getting Started](docs/Getting-Started.md) — install, first styles, override tokens.
-- [API Reference](docs/API-Reference.md) — every function, mixin and map, verified against the code.
-- [Architecture](docs/Architecture.md) — layers, module graph and build flow.
-- [Roadmap](docs/Roadmap.md) — what is done and what is planned.
+- [Getting Started](docs/docs/getting-started.mdx) — install, first styles, override tokens.
+- [API Reference](docs/docs/reference/api-reference.mdx) — every function, mixin and map, verified against the code.
+- [Architecture](docs/docs/reference/architecture.mdx) — layers, module graph and build flow.
 
 Also see [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md) and
 [CHANGELOG.md](CHANGELOG.md).
