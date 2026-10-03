@@ -5,6 +5,18 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-10-03
+
+### Changed
+- **BREAKING** restructure project, migrate Yarn→PNPM, clean up docs
+
+### Fixed
+- **readme**: repair the documentation links$'
+'- **readme**: repair the documentation links$'
+'- subcarpetas como archivos normales$'
+'- add packages field to docs workspace for pnpm v9$'
+'- add packages field to pnpm-workspace.yaml for pnpm v9
+
 ## [Unreleased]
 
 ### Changed
